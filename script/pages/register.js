@@ -1,4 +1,4 @@
-import { register } from "../api/auth";
+import { register } from "../api/auth.js";
 
 const form = document.getElementById("registerForm");
 const statusElement = document.getElementById("status");

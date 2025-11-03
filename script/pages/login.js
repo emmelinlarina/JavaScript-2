@@ -1,4 +1,4 @@
-import { login } from "../api/auth";
+import { login } from "../api/auth.js";
 import * as store from "../utils/storage.js";
 
 const form = document.getElementById("loginForm");

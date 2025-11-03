@@ -1,4 +1,4 @@
-import { load } from "../utils/storage";
+import { load } from "../utils/storage.js";
 
 const BASE = "https://v2.api.noroff.dev";
 

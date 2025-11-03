@@ -1,4 +1,4 @@
-import { apiRequest } from "./api-fetch";
+import { apiRequest } from "./api-fetch.js";
 
 //JS Doc for later
 
