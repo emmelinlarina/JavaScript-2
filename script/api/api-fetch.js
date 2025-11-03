@@ -1,3 +1,5 @@
+import { load } from "../utils/storage";
+
 const BASE = "https://v2.api.noroff.dev";
 
 // Remember JSDoc for later
@@ -6,7 +8,7 @@ export async function apiRequest(path, { method = "GET", body = null, auth = fal
     const headers = { "Content-Type": "application/json" };
 
     if (auth) {
-        const token = localStorage.getItem("token");
+        const token = load()?.accessToken;
         if (token) {
             headers.Authorization = `Bearer ${token}`;
         }
