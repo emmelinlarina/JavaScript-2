@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/pages/account.css">
     <link rel="stylesheet" href="css/pages/login.css">
 
     <script src="https://kit.fontawesome.com/e0e8f3b90b.js" crossorigin="anonymous"></script>
@@ -23,15 +24,31 @@
 
     <header></header>
 
-    <main class="container">
-        <h1>We missed you!</h1>
-        <form id="loginForm">
-            <label>Email <input class="input" name="email" type="email" required> </label>
-            <label>Password <input class="input" name="password" required></label>
-            <button class="btn">Log in</button>
+    <main class="account">
+        <a href="auth.html" class="account-back" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></a>
+
+        <section class="account-panel"></section>
+        <h1 class="account-title">We missed you!</h1>
+
+        <form id="loginForm" class="account-form">
+            <label class="field">
+                <span class="field-label">Email</span>
+                <input class="field-input" name="email" type="email" placeholder="user@example.com" required>
+            </label>
+
+            <label class="field">
+                <span class="field-label">Email</span>
+                <input class="field-input" name="password" type="password" placeholder="****" required>
+            </label>
+            <button class="btn account-cta" type="submit">Log in</button>
         </form>
-        <p>Don't have an account? <a href="register.html">Register here</a></p>
-        <div id="status" class="help" role="status" aria-live="polite"></div>
+
+        <p class="account-switch">
+            Don't have an account?
+            <a href="register.html">Register here</a>
+        </p>
+
+        <div id="status" class="account-status" role="status" aria-live="polite"></div>
     </main>
 
     <footer></footer>

@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/pages/account.css">
     <link rel="stylesheet" href="css/pages/register.css">
 
     <script src="https://kit.fontawesome.com/e0e8f3b90b.js" crossorigin="anonymous"></script>
@@ -25,16 +26,37 @@
 
     </header>
 
-    <main class="container">
-        <h1>Lets get started</h1>
-        <form id="registerForm">
-            <label>Name <input class="input" name="name" required> </label>
-            <label>Email <input class="input" name="email" type="email" required> </label>
-            <label>Password <input class="input" name="password" required></label>
-            <button class="btn">Create account</button>
+    <main class="account">
+        <a href="auth.html" class="account-back" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></a>
+
+        <section class="account-panel"></section>
+        <h1 class="account-title">Lets get started</h1>
+
+        <form id="loginForm" class="account-form">
+
+            <label class="field">
+                <span class="field-label"></span>
+                <input class="field-input" name="name" type="name" placeholder="What is your name?" required>
+            </label>
+
+            <label class="field">
+                <span class="field-label"></span>
+                <input class="field-input" name="email" type="email" placeholder="example@email.com" required>
+            </label>
+
+            <label class="field">
+                <span class="field-label"></span>
+                <input class="field-input" name="password" type="password" placeholder="****" required>
+            </label>
+            <button class="btn account-cta" type="submit">Create Account</button>
         </form>
-        <p>Already have an account? <a href="login.html">Log in</a></p>
-        <div id="status" class="help" role="status" aria-live="polite"></div>
+
+        <p class="account-switch">
+            Already have an account?
+            <a href="login.html">Login here</a>
+        </p>
+
+        <div id="status" class="account-status" role="status" aria-live="polite"></div>
     </main>
 
     <footer></footer>
