@@ -1,0 +1,116 @@
+.account {
+    min-height: 500px;
+    grid-template-columns: auto 1fr;
+    background: #fdfdfd;
+}
+
+.account-back {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    margin: 1rem;
+    width: max-content;
+    color: #111;
+    text-decoration: none;
+    font-size: 1.25rem;
+}
+
+.account-panel {
+    width: min(500px, 92vw);
+    margin: 0 auto;
+    border-radius: 16px;
+    padding: 1.25rem 1.25rem 1.5rem;
+}
+
+.account-title {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    margin: .25rem 0 1rem;
+}
+
+.account-form {
+    display: grid;
+}
+
+.field {
+    display: grid;
+    gap: .375rem;
+}
+
+.field-input {
+    font-size: 1rem;
+    padding: .8rem 1rem;
+    background: #f3f4f8;
+    border: 1px;
+    border-radius: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    font: inherit;
+}
+
+.field-input::placeholder { color: #9ca3af;}
+.field-input:focus { background-color: #fff; box-shadow: 0 0 0 3px rgba(80, 80, 80, 0.5); border-color: #111; }
+
+.btn {
+    border: 0;
+    cursor: pointer;
+    padding: .9rem 1.1rem;
+    border-radius: 16px;
+    background: #2b2623;
+    color: #fff;
+    font-weight: 800;
+    transition: transform .05s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.btn:active {
+    transform: scale(.98);
+}
+
+.btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.account-cta {
+    width: 100%;
+    margin-top: 4rem;
+}
+
+.account-switch {
+    text-align: center;
+    margin: .75rem 0 0;
+    font-size: .95rem;
+    color: #6b7280;
+}
+
+.account-switch a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #111;
+}
+
+.account-switch a:hover {
+    text-decoration: underline;
+}
+
+.account-status {
+    min-height: 1.25rem;
+    margin-top: .5rem;
+    font-size: .95rem;
+    color: #6b7280;
+}
+
+.account-status.error {
+    color: #ad2323;
+}
+
+.account-status.success {
+    color: #237a23;
+}
+
+@media (max-width: 720px) {
+    .account-panel {
+        padding: 1.5rem 1.5rem 1.75rem;
+    }
+}
