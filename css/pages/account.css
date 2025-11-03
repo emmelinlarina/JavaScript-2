@@ -32,6 +32,12 @@
     display: grid;
 }
 
+.account-lead { color: #374151; margin: .25rem 0 1rem;}
+
+.account-actions {
+    display: flex; gap: .75rem; flex-wrap: wrap;
+}
+
 .field {
     display: grid;
     gap: .375rem;
@@ -61,6 +67,12 @@
     color: #fff;
     font-weight: 800;
     transition: transform .05s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.btn.btn-light { 
+    background-color: #fff;
+    color: #2b2623; 
+    border: 2px solid #2b2623;
 }
 
 .btn:active {

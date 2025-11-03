@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/navigation.css">
     <link rel="stylesheet" href="css/pages/auth.css">
+    <link rel="stylesheet" href="css/pages/account.css">
 
     <script src="https://kit.fontawesome.com/e0e8f3b90b.js" crossorigin="anonymous"></script>
 
@@ -25,10 +26,22 @@
 
     </header>
 
-    <main class="container">
-        <h1>Start sharing your story</h1>
-        <a class="btn" href="register.html">Sign up</a>
-        <a class="btn" href="login.html">Log in</a>
+    <main class="account">
+        <a href="auth.html" class="account-back" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></a>
+
+        <section class="account-panel">
+            <h1 class="account-title">Start sharing your story</h1>
+            <p class="account-lead">
+                Create your account to join the community. <br>
+                Stay updated, inspired, and connected.
+            </p>
+
+            <div class="account-actions"></div>
+            <a class="btn" href="register.html">Sign up</a>
+            <a class="btn btn-light" href="login.html">Log in</a>
+
+            <div id="status" class="account-status" role="status" aria-live="polite"></div>
+        </section>
     </main>
 
     <footer></footer>
