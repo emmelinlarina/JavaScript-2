@@ -1,7 +1,6 @@
 .account {
     min-height: 500px;
     grid-template-columns: auto 1fr;
-    background: #fdfdfd;
 }
 
 .account-back {
@@ -32,7 +31,7 @@
     display: grid;
 }
 
-.account-lead { color: #374151; margin: .25rem 0 1rem;}
+.account-lead { color: #374151; margin: .25rem 0 1rem; font-size: .85rem;}
 
 .account-actions {
     display: flex; gap: .75rem; flex-wrap: wrap;
@@ -44,7 +43,6 @@
 }
 
 .field-input {
-    font-size: 1rem;
     padding: .8rem 1rem;
     background: #f3f4f8;
     border: 1px;
@@ -61,18 +59,22 @@
 .btn {
     border: 0;
     cursor: pointer;
-    padding: .9rem 1.1rem;
+    padding: 1rem 1.4rem;
     border-radius: 16px;
     background: #2b2623;
     color: #fff;
     font-weight: 800;
     transition: transform .05s ease, box-shadow .15s ease, background .15s ease;
+    font-size: 1rem;
+    margin-right: 10rem;
 }
 
 .btn.btn-light { 
     background-color: #fff;
     color: #2b2623; 
     border: 2px solid #2b2623;
+    margin-right: 5rem;
+    font-weight: 800;
 }
 
 .btn:active {
@@ -87,6 +89,7 @@
 .account-cta {
     width: 100%;
     margin-top: 4rem;
+    letter-spacing: 2px;
 }
 
 .account-switch {
@@ -98,8 +101,10 @@
 
 .account-switch a {
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     color: #111;
+    letter-spacing: 0;
+    
 }
 
 .account-switch a:hover {
