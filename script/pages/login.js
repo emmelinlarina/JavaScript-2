@@ -1,9 +1,7 @@
-import { login } from "../api/auth.js";
+import { login, createApiKey } from "../api/auth.js";
 import * as store from "../utils/storage.js";
 
-console.log("login.js loaded");
 const form = document.getElementById("loginForm");
-console.log("form found?", !!form);
 const statusElement = document.getElementById("status");
 
 form?.addEventListener("submit", async (event) => {
@@ -20,11 +18,21 @@ form?.addEventListener("submit", async (event) => {
     btn.disabled = true;
 
     try {
-        const data = await login(credentials);
-        console.log("Login response:", data);
+        const authResult = await login(credentials);
+        const user = authResult.data ?? authResult;
 
-        store.save(data.data ?? data);
-        
+        let apiKey = user.apiKey;
+        if (!apiKey) {
+            const keyResult =  await createApiKey();
+            apiKey = 
+            keyResult?.data?.key ?? 
+            keyResult?.data?.apiKey ??
+            keyResult?.key ??
+            keyResult?.apiKey;
+        }
+
+        store.save({...user, apiKey });
+
         location.href = "index.html";
     } catch (error) {
         statusElement.textContent = error.message || "Login failed";

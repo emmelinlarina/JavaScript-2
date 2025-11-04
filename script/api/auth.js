@@ -17,3 +17,10 @@ export function login(credentials) {
         body: credentials,
     });
 }
+
+export function createApiKey() {
+    return apiRequest("/auth/create-api-key", {
+        method: "POST",
+        auth: true,
+    });
+}

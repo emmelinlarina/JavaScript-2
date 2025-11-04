@@ -26,10 +26,22 @@
 
     </header>
 
-    <main class="container">
-        <h1>Your Feed</h1>
-        <form id="createPost"><input class="input" name="body" placeholder="How is your day?"></form>
+    <main class="container feed">
+        <h1 class="feed-title">Updates for you, <span data-greeting></span></h1>
 
+        <div class="feed-tabs">
+            <button class="chip is-active">Recent</button>
+            <button class="chip">Friends</button>
+            <button class="chip">Discover+</button>
+        </div>
+
+        <form id="createPost" class="create-post">
+            <input class="input" name="body" placeholder="How is your day?"></textarea>
+            <button class="btn" type="submit">Post</button>
+        </form>
+
+        <p class="status" data-status></p>
+        <section class="feed-list" data-feed></section>
     </main>
 
     <footer></footer>
@@ -42,7 +54,6 @@
         <a href="profile.html" data-tab="profile"><i class="fa-solid fa-circle-user"></i></a>
     </nav>
 
-    <script type="module" src="script/api/api-fetch.js"></script>
     <script type="module" src="script/pages/feed.js"></script>
 
 </body>

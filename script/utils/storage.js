@@ -2,15 +2,18 @@ const STORAGE_KEY = "userData";
 
 //js Doc for later
 
-export function save(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+export function save(response) {
+    const normalized = response?.data ?? response;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
 }
 
 //js Doc for later
 
 export function load() {
     const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : null;
+    if (!data) return null;
+    const parsed = JSON.parse(data);
+    return parsed?.data ?? parsed;
 }
 
 export function clear() {
