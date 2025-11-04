@@ -15,21 +15,22 @@ export async function apiRequest(path, { method = "GET", body = null, auth = fal
     }
 
 const options = { method, headers };
+    if (body) options.body = JSON.stringify(body);
+    
+    const response = await fetch(`${BASE}${path}`, options);
 
-    if (body) {
-        options.body = JSON.stringify(body);
+    let data = null;
+    try {
+        data = await response.json();
+    } catch (error) {
+        // Ignore JSON parse errors
     }
 
-    try {
-        const response = await fetch(`${BASE}${path}`, options);
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.message || "API request failed");
-        }
-        return data;
-    } catch (error) {
-        console.error("API request error:", error);
+    if (!response.ok) {
+        const error = new Error(data?.message || "API request failed");
+        error.status = response.status;
+        error.data = data;
         throw error;
     }
-
+    return data;
 }

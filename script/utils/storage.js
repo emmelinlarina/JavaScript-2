@@ -16,3 +16,8 @@ export function load() {
 export function clear() {
     localStorage.removeItem(STORAGE_KEY);
 }
+
+export function logout() {
+    localStorage.removeItem(STORAGE_KEY);
+    location.href = "auth.html";
+}
