@@ -21,6 +21,8 @@ form?.addEventListener("submit", async (event) => {
         const authResult = await login(credentials);
         const user = authResult.data ?? authResult;
 
+        store.save(user);
+
         let apiKey = user.apiKey;
         if (!apiKey) {
             const keyResult =  await createApiKey();
@@ -31,7 +33,8 @@ form?.addEventListener("submit", async (event) => {
             keyResult?.apiKey;
         }
 
-        store.save({...user, apiKey });
+        if (apiKey) store.save({ ...store.load(), apiKey });
+        
 
         location.href = "index.html";
     } catch (error) {

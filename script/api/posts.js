@@ -39,3 +39,18 @@ export function deletePost(id) {
         auth: true,
     });
 }
+
+export function reactToPost(id) {
+    return apiRequest(`/social/posts/${encodeURIComponent(id)}/react/%E2%AD%90`, {
+        method: "PUT",
+        auth: true,
+    });
+} 
+
+export function createComment(id, body) {
+    return apiRequest(`/social/posts/${encodeURIComponent(id)}/comment`, {
+        method: "POST",
+        body: { body },
+        auth: true,
+    });
+}

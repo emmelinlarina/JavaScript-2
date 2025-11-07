@@ -1,18 +1,11 @@
 import { load, logout, save } from "../utils/storage.js";
 import { createApiKey } from "../api/auth.js";  
-import { listPosts, createPost } from "../api/posts.js";  
+import { listPosts, createPost, reactToPost, createComment } from "../api/posts.js";  
 
 const user = load();
 if (!user?.accessToken) { location.href = "login.html"; }
 
-function normalizeMediaUrl(u) {
-    if (!u) return "";
-    let url = String(u).trim();
-    if (url.startsWith("//")) url = "https;" + url;
-    if (url.startsWith("https://")) url = url.replace(/^http:\/\//, "https;//");
-    url = url.replace(/\s/g, "%20");
-    return url;
-}
+
 
 document.getElementById("logoutBtn").addEventListener("click", logout);
 
@@ -38,6 +31,15 @@ const feedEl = document.querySelector("[data-feed]");
 const statusEl = document.querySelector("[data-status]");
 const form = document.getElementById("createPost");
 const input = form?.querySelector('[name="body"]');
+
+function normalizeMediaUrl(u) {
+    if (!u) return "";
+    let url = String(u).trim();
+    if (url.startsWith("//")) url = "https:" + url;
+    if (url.startsWith("https://")) url = url.replace(/^http:\/\//, "https://");
+    url = encodeURI(url);
+    return url;
+}
 
 if (titleEl) titleEl.textContent = user?.name ? `${user.name}` : "Friend";
 
@@ -75,7 +77,7 @@ function postCard(p) {
     const commentCount = Array.isArray(p?.comments) ? p.comments.length : 0;
 
     return `
-    <article class="post">
+    <article class="post" data-post="${p.id}">
         <header class="post-header">
             <div class="post-user">
                 <span class="post-avatar" ${avatarUrl ? `style="background-image:url('${avatarUrl}')"` : ""}></span>
@@ -90,6 +92,7 @@ function postCard(p) {
                 <img src="${media}" alt="${escapeHtml(mediaAlt || "")}" loading="lazy" decoding="async">
                 </div>
             </figure>` : ""}
+
         ${body ? `<p class="post-body">${body}</p>` : ""}
 
         <footer class="post-actions">
@@ -98,8 +101,33 @@ function postCard(p) {
             <button class="icon-btn" data-comment="${p.id}" aria-label="Comment"><i class="fa-regular fa-comment"></i></button>
             <span class="meta">${commentCount}</span>
         </footer>
+
+        <div class="comments" id="c-${p.id}" hidden>
+            <form class="comment-form" data-post="${p.id}">
+                <input type="text" name="comment" placeholder="Write a comment..." autocomplete="off" required>
+                <button type="submit" class="btn btn--sm">Post</button>
+            </form>
+        </div>
     </article>`;
 }
+
+// likes and comments
+
+feedEl.addEventListener("click", async (e) => {
+    const btn = e.target.closest("[data-like]");
+    if (!btn) return;
+    const id = btn.dataset.like;
+
+    try {
+        await reactToPost(id);
+        await loadFeed();
+    } catch (error) {
+        statusEl && (statusEl.textContent = error.message || "Failed to like");
+        setTimeout(() => (statusEl.textContent = ""), 1500);
+    }
+});
+
+
 
 function renderPosts(posts=[]) {
     if (!feedEl) return;
@@ -227,6 +255,40 @@ function attachMediaGuards(scope = document) {
         img.addEventListener("load", () => clearTimeout(t), {once:true});
     });
 }
+
+feedEl.addEventListener("click", async (e) => {
+    const btn = e.target.closest("[data-comment]");
+    if (!btn) return;
+    const id = btn.dataset.comment;
+    const panel = document.getElementById(`c-${id}`);
+    if (!panel) return;
+
+    const isHidden = panel.hasAttribute("hidden");
+    btn.setAttribute("aria-expanded", isHidden ? "true" : "false");
+    if (isHidden) panel.removeAttribute("hidden");
+    else panel.setAttribute("hidden", "");
+
+}); 
+
+feedEl.addEventListener("submit", async (e) => {
+    const form = e.target.closest(".comment-form");
+    if (!form) return;
+    e.preventDefault();
+
+    const id = form.dataset.post;
+    const input = form.querySelector('input[name="comment"]');
+    const text = input.value.trim();
+    if (!text) return;
+
+    try {
+        await createComment(id, text);
+        input.value = "";
+        await loadFeed();
+    } catch (error) {
+        statusEl && (statusEl.textContent = error.message || "Failed to comment");
+        setTimeout(() => (statusEl.textContent = ""), 1500);
+    }
+});
 
 
 await ensureApiKey();
