@@ -30,7 +30,7 @@ const statusEl = document.querySelector("[data-status]");
 const form = document.getElementById("createPost");
 const input = form?.querySelector('[name="body"]');
 
-if (titleEl) titleEl.textContent = user?.name || "Friend";
+if (titleEl) titleEl.textContent = user?.name ? `${user.name}` : "Friend";
 
 const timeAgo = (iso) => {
     const d = new Date(iso); const s = Math.floor((Date.now() - d.getTime()) / 1000);
@@ -95,6 +95,8 @@ function renderPosts(posts=[]) {
 
 async function loadFeed() {
     if (statusEl) statusEl.textContent = "Loading feed";
+    renderSkeletons(3);
+
     try {
         const data = await listPosts({ limit: 20, sort: "created", sortOrder: "desc" });
         const posts = data?.data ?? data ?? []; 
@@ -129,6 +131,40 @@ form?.addEventListener("submit", async (event) => {
         if (btn) btn.disabled = false;
     }
 });
+
+const fab = document.getElementById("openCreate");
+fab?.addEventListener("click", () => { input?.focus(); });
+
+if (input && input.tagName === "TEXTAREA") {
+    const auto = () => { 
+        input.style.height = "auto"; 
+        input.style.height = input.scrollHeight + "px" };
+    input.addEventListener("input", auto);
+    auto();
+}
+
+document.querySelectorAll(".feed-tabs .chip").forEach((btn) => {
+    btn.addEventListener("click", () => {
+        document.querySelectorAll(".feed-tabs .chip").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+    });
+});
+
+function renderSkeletons(n = 3) {
+    const el = document.querySelector("[data-feed]");
+    if (!el) return;
+    el.innerHTML = Array.from({ length: n }).map(() => `
+    <article class="skel">
+        <div class="row">
+            <div class="avatar"></div>
+            <div class="bar" style="width:50%"></div>
+        </div>
+        <div class="img"></div>
+        <div class="bar" style="width:90%; margin 6px 0"></div>
+        <div class="bar" style="width:60%; margin 6px 0"></div>
+    <article>
+    `).join("");
+}
 
 await ensureApiKey();
 loadFeed();
