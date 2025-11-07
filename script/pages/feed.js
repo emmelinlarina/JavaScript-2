@@ -1,6 +1,6 @@
 import { load, logout, save } from "../utils/storage.js";
 import { createApiKey } from "../api/auth.js";  
-import { listPosts, createPost, reactToPost, createComment } from "../api/posts.js";  
+import { getPost, listPosts, createPost, reactToPost, createComment } from "../api/posts.js";  
 
 const user = load();
 if (!user?.accessToken) { location.href = "login.html"; }
@@ -36,7 +36,7 @@ function normalizeMediaUrl(u) {
     if (!u) return "";
     let url = String(u).trim();
     if (url.startsWith("//")) url = "https:" + url;
-    if (url.startsWith("https://")) url = url.replace(/^http:\/\//, "https://");
+    if (url.startsWith("http://")) url = url.replace(/^http:\/\//, "https://");
     url = encodeURI(url);
     return url;
 }
@@ -259,16 +259,9 @@ function attachMediaGuards(scope = document) {
 feedEl.addEventListener("click", async (e) => {
     const btn = e.target.closest("[data-comment]");
     if (!btn) return;
-    const id = btn.dataset.comment;
-    const panel = document.getElementById(`c-${id}`);
-    if (!panel) return;
+    showComments(btn.dataset.comment);
 
-    const isHidden = panel.hasAttribute("hidden");
-    btn.setAttribute("aria-expanded", isHidden ? "true" : "false");
-    if (isHidden) panel.removeAttribute("hidden");
-    else panel.setAttribute("hidden", "");
-
-}); 
+});
 
 feedEl.addEventListener("submit", async (e) => {
     const form = e.target.closest(".comment-form");
@@ -289,6 +282,101 @@ feedEl.addEventListener("submit", async (e) => {
         setTimeout(() => (statusEl.textContent = ""), 1500);
     }
 });
+
+const modalRoot = document.getElementById("modal-root");
+
+function closeModal() {
+    modalRoot.setAttribute("hidden", "");
+    modalRoot.innerHTML = "";
+    document.body.classList.remove("no-scroll");
+    document.removeEventListener("keydown", escClose);
+}
+function escClose(e) {
+    if (e.key === "Escape") closeModal();
+}
+
+function openCommentModal(post) {
+    modalRoot.innerHTML = `
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+
+        <div class="modal-bar">
+            <h3 id="modalTitle">Comments ${post?.author?.name ?? "Post"}</h3>
+            <button class="modal-close" data-close aria-label="Close modal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="modal-content" data-list>
+            ${Array.isArray(post?.comments) && post.comments.length ? post.comments.map(c => `
+                <div class="modal-comment">
+                    <strong>${escapeHtml(c.author?.name || "Unknown")}</strong>
+                    <span>${timeAgo(c.created)}</span>
+                    <div>${escapeHtml(c?.body || "")}</div>
+                </div>
+            `).join("") : 
+
+            `<div class="modal-comment">
+                <p>No comments yet.</p>
+            </div>`}
+    </div>
+
+    <form class="modal-form" data-post="${post.id}">
+        <input type="text" name="comment" placeholder="Write a comment..." autocomplete="off" required>
+        <button class="btn btn--sm">Post Comment</button>
+    </form>
+    </div>
+`;
+
+modalRoot.removeAttribute("hidden");
+document.body.classList.add("no-scroll");
+
+modalRoot.addEventListener("click", (e) => {
+    if (e.target === modalRoot || e.target.closest("[data-close]")) closeModal();
+    }, {once:false});
+
+    document.addEventListener("keydown", escClose);
+
+    // new comment 
+    const formEl = modalRoot.querySelector("form.modal-form");
+    const listEl = modalRoot.querySelector("[data-list]");
+    formEl.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const input = formEl.querySelector('input[name="comment"]');
+        const text = input.value.trim();
+        if (!text) return;
+
+        try {
+            await createComment(post.id, text);
+            input.value = "";
+
+            const fresh = await getPost(post.id);
+            const data = fresh?.data ?? fresh;
+            listEl.innerHTML = Array.isArray(data?.comments) && data.comments.length ? data.comments.map(c => `
+                <div class="modal-comment">
+                    <strong>${escapeHtml(c.author?.name || "Unknown")}</strong>
+                    <span> - ${timeAgo(c.created)}</span>
+                    <div>${escapeHtml(c?.body || "")}</div>
+                </div>
+            `).join("") : `<div class="modal-comment"><p>No comments yet.</p></div>`;
+
+            await loadFeed();
+        } catch (error) {
+            statusEl && (statusEl.textContent = error.message || "Failed to comment");
+            setTimeout(() => statusEl && (statusEl.textContent = ""), 1500);
+        }
+    });
+}
+
+async function showComments(postId) {
+    try {
+        const res = await getPost(postId);
+        const post = res?.data ?? res;
+        openCommentModal(post);
+    } catch (error) {
+        statusEl && (statusEl.textContent = error.message || "Failed to load comments");
+        setTimeout(() => {
+            statusEl && (statusEl.textContent = "");
+        }, 1500);
+    }
+}
 
 
 await ensureApiKey();
