@@ -69,7 +69,7 @@ function postCard(p) {
     <article class="post">
         <header class="post-header">
             <div class="post-user">
-                <span class="post-avatar" ${avatarUrl ? `style="background-image:url('${avatarAlt}')"` : ""}></span>
+                <span class="post-avatar" ${avatarUrl ? `style="background-image:url('${avatarUrl}')"` : ""}></span>
                 <strong>${escapeHtml(author)}</strong>
             </div>
             <time class="post-time" datetime="${p.created}">${timeAgo(p.created)}</time>
