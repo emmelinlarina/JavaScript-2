@@ -35,9 +35,7 @@ header {
 
 /* FEED !! */
 .feed-list { display: grid; gap: 12px;}
-.post { 
-    background-color: #fff; 
-    padding: 12px;} 
+.post {  background-color: #fff; padding: 12px; max-width: 520px;} 
 
 .post-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;}
 .post-user {display: flex; align-items: center; gap: 10px;} 
@@ -48,8 +46,15 @@ header {
 }
 
 .post-time { font-size: 0.75rem; color: #6b7280;}
+
 .post-media { margin: 8px 0 6px; border-radius: 8px; overflow: hidden; }
-.post-media img { display: block; object-fit: cover; width: 100%; height: auto; aspect-ratio: 16/9; }
+.post-media img { width: 100%; height: 100%; object-fit: cover; display: block;}
+
+.post-media .ratio { width: 100%; position: relative;}
+.post-media .ratio.r-16x9 { aspect-ratio: 16/9;}
+.post-media .ratio.r-1x1 { aspect-ratio: 1/1;}
+.post-media .ratio.r-4x5 { aspect-ratio: 4/5;}
+
 .post-body { margin: 6px 0 2px;}
 .post-actions { display: flex; align-items: center; gap: 8px; margin-top: 6px; color: #6b7280;}
 
@@ -57,6 +62,13 @@ header {
 .icon-btn:hover { background: #292929; color: #e6e6e6;}
 .meta { font-size: 0.85rem; }
 
+.media-fallback {
+    display: grid; place-items: center; gap: 6px;
+    width: 100%; height: 100%; background-color: #e5e7eb; color: #16243a;
+    font-size: 0.9rem; text-align: center;
+}
+
+ 
 .feed-empty {
     background: #fff; border: 1px solid #d1d5db; border-radius: 12px;
 }
@@ -71,3 +83,4 @@ header {
 .skel .bar { height: 12px; border-radius: 6px; background:  linear-gradient(90deg, #eef1f5,  #c7c7c7, #b6b6b6 ); animation: shimmer 1.2s infinite;} 
 .skel .img { height: 200px; border-radius: 12px; background-color: #eef1f5; margin: 8px 0;} 
 @keyframes shimmer {0% {filter:brightness(1)}50% {filter:brightness(1.25)}100% {filter:brightness(1)}}
+

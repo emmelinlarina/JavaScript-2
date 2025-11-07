@@ -5,6 +5,15 @@ import { listPosts, createPost } from "../api/posts.js";
 const user = load();
 if (!user?.accessToken) { location.href = "login.html"; }
 
+function normalizeMediaUrl(u) {
+    if (!u) return "";
+    let url = String(u).trim();
+    if (url.startsWith("//")) url = "https;" + url;
+    if (url.startsWith("https://")) url = url.replace(/^http:\/\//, "https;//");
+    url = url.replace(/\s/g, "%20");
+    return url;
+}
+
 document.getElementById("logoutBtn").addEventListener("click", logout);
 
 async function ensureApiKey() {
@@ -58,7 +67,7 @@ function postCard(p) {
     const avatarUrl = p?.author?.avatar?.url || "";
     const avatarAlt = p?.author?.avatar?.alt || author;
 
-    const media = p?.media?.url || "";
+    const media = normalizeMediaUrl(p?.media?.url || "");
     const mediaAlt = p?.media?.alt || "";
 
     const body = escapeHtml(p?.body || "");
@@ -75,7 +84,12 @@ function postCard(p) {
             <time class="post-time" datetime="${p.created}">${timeAgo(p.created)}</time>
         </header>
 
-        ${media ? `<figure class="post-media"><img src="${media}" alt=""></figure>` : ""}
+        ${media ? `
+            <figure class="post-media">
+                <div class="ratio r-1x1">
+                <img src="${media}" alt="${escapeHtml(mediaAlt || "")}" loading="lazy" decoding="async">
+                </div>
+            </figure>` : ""}
         ${body ? `<p class="post-body">${body}</p>` : ""}
 
         <footer class="post-actions">
@@ -91,7 +105,10 @@ function renderPosts(posts=[]) {
     if (!feedEl) return;
     if (!posts.length) return renderEmpty();
     feedEl.innerHTML = posts.map(postCard).join("");
+    classifyPostImages(feedEl);
+    attachMediaGuards(feedEl);
 }
+
 
 async function loadFeed() {
     if (statusEl) statusEl.textContent = "Loading feed";
@@ -138,7 +155,8 @@ fab?.addEventListener("click", () => { input?.focus(); });
 if (input && input.tagName === "TEXTAREA") {
     const auto = () => { 
         input.style.height = "auto"; 
-        input.style.height = input.scrollHeight + "px" };
+        input.style.height = input.scrollHeight + "px"
+    };
     input.addEventListener("input", auto);
     auto();
 }
@@ -160,11 +178,56 @@ function renderSkeletons(n = 3) {
             <div class="bar" style="width:50%"></div>
         </div>
         <div class="img"></div>
-        <div class="bar" style="width:90%; margin 6px 0"></div>
-        <div class="bar" style="width:60%; margin 6px 0"></div>
-    <article>
+        <div class="bar" style="width:90%; margin: 6px 0"></div>
+        <div class="bar" style="width:60%; margin: 6px 0"></div>
+    </article>
     `).join("");
 }
+
+function pickBoxClass(ratio){
+    if (ratio >= 1.6) return "r-16x9";
+    if (ratio <= 0.9) return "r-4x5";
+    return "r-1x1";
+} 
+
+function classifyPostImages(scope = document) {
+    scope.querySelectorAll(".post-media img").forEach(img => {
+        const apply = () => {
+            const r = img.naturalWidth / img.naturalHeight || 1;
+            const box = pickBoxClass(r);
+            const wrapper = img.closest(".ratio");
+            if (wrapper) {
+                wrapper.classList.remove("r-16x9", "r-1x1", "r-4x5");
+                wrapper.classList.add(box);
+            }
+        };
+        if (img.complete) apply();
+        else img.addEventListener("load", apply, {once:true});
+    });
+}
+
+function attachMediaGuards(scope = document) {
+    scope.querySelectorAll(".post-media img").forEach((img) => {
+        const fig = img.closest("figure");
+        if (!fig) return;
+
+        let done = false;
+        const nuke = () => {
+            if (done) return;
+            done = true;
+            fig.remove();
+        };
+
+        img.addEventListener("error", nuke, {once:true});
+
+        const t = setTimeout(() => {
+            if (!img.complete || img.naturalWidth === 0) nuke(); 
+        }, 6000);
+
+        img.addEventListener("load", () => clearTimeout(t), {once:true});
+    });
+}
+
 
 await ensureApiKey();
 loadFeed();
