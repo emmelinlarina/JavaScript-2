@@ -3,11 +3,11 @@
 
 <head>
 
-    <title>Posting Page</title>
+    <title>Auth Landing Page</title>
     <link rel="icon" type="image/png" sizes="32x32" href="">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Posting Page">
+    <meta name="description" content="Auth Landing Page">
 
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
@@ -20,18 +20,57 @@
 
 <body>
 
-
-    <header>
-
+    <header class="create-header">
+        <a href="index.html" class="account-back" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></a>
+        <h1>Create Post</h1>
     </header>
 
-    <main>
+    <main class="container create">
+        <form id="createFull" class="card create-form">
 
+            <label class="field">
+                <span>Title</span>
+                <textarea name="body" class="input" rows="4" maxlength="500" placeholder="What's on your mind?"
+                    required></textarea>
+            </label>
+
+            <label class="field">
+                <span>Image URL (optional)</span>
+                <input class="imageUrl" name="input" type="url" placeholder="https://example.com/image.jpg">
+            </label>
+
+            <label class="field">
+                <span>Image alt text (optional, accessibility)</span>
+                <input class="imageAlt" name="input" type="text" maxlength="120" placeholder="Describe the image">
+            </label>
+
+            <div class="preview" id="mediaPreview" hidden>
+                <div class="ratio r-1x1">
+                    <img id="previewImg" alt="" />
+                </div>
+                <p class="hint">Preview</p>
+            </div>
+
+            <p class="status" id="status"></p>
+
+            <div class="actions">
+                <button type="submit" class="btn">Post</button>
+            </div>
+        </form>
     </main>
 
     <footer></footer>
 
-    <script type="module" src="script/api/api-fetch.js"></script>
+    <nav class="bottom-nav" role="navigation" aria-label="Primary">
+        <a href="index.html" data-tab="home" aria-current="page"><i class="fa-solid fa-house"></i></a>
+        <a href="#search" data-tab="search"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <a href="post.html" id="openCreate" class="fab" aria-controls="createPost" aria-label="Create post"><i
+                class="fa-solid fa-plus"></i></a>
+        <a href="profile.html" data-tab="profile"><i class="fa-solid fa-circle-user"></i></a>
+        <button id="logoutBtn" class="btn btn-signout"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </nav>
+
+
     <script type="module" src="script/pages/post.js"></script>
 
 </body>

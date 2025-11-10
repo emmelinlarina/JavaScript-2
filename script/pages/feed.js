@@ -164,7 +164,9 @@ form?.addEventListener("submit", async (event) => {
     const btn = form.querySelector("button") || form.querySelector('input[type="submit"]');
     if (btn) btn.disabled = true;
 
+
     if (statusEl) statusEl.textContent = "Creating post...";
+    
     try {
         await createPost({ body });
         if (input) input.value = "";
