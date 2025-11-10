@@ -35,7 +35,9 @@
         </div>
 
         <form id="createPost" class="create-post">
-            <textarea class="input" name="body" placeholder="How is your day?"></textarea>
+            <input class="input" name="title" type="text" maxlength="80" placeholder="Title" aria-label="Post title"
+                required />
+            <textarea class="input" name="body" placeholder="Say something..." aria-label="Post body"></textarea>
             <button class="btn" type="submit">Post</button>
         </form>
 

@@ -51,6 +51,8 @@ header {
 
 .post-time { font-size: 0.75rem; color: #6b7280;}
 
+.post-title { margin: 4px 5px; font-size: 1.2rem; font-weight: 700; }
+
 .post-media { margin: 8px 0 6px; border-radius: 8px; overflow: hidden; }
 .post-media img { width: 100%; height: 100%; object-fit: cover; display: block;}
 

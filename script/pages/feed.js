@@ -29,8 +29,7 @@ async function ensureApiKey() {
 const titleEl = document.querySelector("[data-greeting]");
 const feedEl = document.querySelector("[data-feed]");
 const statusEl = document.querySelector("[data-status]");
-const form = document.getElementById("createPost");
-const input = form?.querySelector('[name="body"]');
+
 
 function normalizeMediaUrl(u) {
     if (!u) return "";
@@ -158,22 +157,32 @@ async function loadFeed() {
 
 //Create post 
 
+const form = document.getElementById("createPost");
+const bodyInput = form?.querySelector('[name="body"]');
+const titleInput = form?.querySelector('[name="title"]');
+
 form?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const body = input?.value.trim();
-    if (!body) return;
+
+    let title = titleInput?.value.trim() || "";
+    let body = bodyInput?.value.trim() || "";
+
+    if (!title) {
+        title = body.split("").slice(0, 4).join("");
+    }
+    if (!title) return;
+
+    if (title.length > 80) title = title.slice(0, 80); + "...";
 
     const btn = form.querySelector("button") || form.querySelector('input[type="submit"]');
+
     if (btn) btn.disabled = true;
-
-
     if (statusEl) statusEl.textContent = "Creating post...";
-
-    const title = body.length > 80 ? body.slice(0, 77) + "..." : body;
 
     try {
         await createPost({ title, body });
-        if (input) input.value = "";
+        if (titleInput) titleInput.value = "";
+        if (bodyInput) bodyInput.value = "";
         await loadFeed();
         if (statusEl) statusEl.textContent = "Post created";
     } catch (error) {
@@ -184,14 +193,14 @@ form?.addEventListener("submit", async (event) => {
 });
 
 const fab = document.getElementById("openCreate");
-fab?.addEventListener("click", () => { input?.focus(); });
+fab?.addEventListener("click", () => { bodyInput?.focus(); });
 
-if (input && input.tagName === "TEXTAREA") {
+if (bodyInput && bodyInput.tagName === "TEXTAREA") {
     const auto = () => { 
-        input.style.height = "auto"; 
-        input.style.height = input.scrollHeight + "px"
+        bodyInput.style.height = "auto"; 
+        bodyInput.style.height = bodyInput.scrollHeight + "px"
     };
-    input.addEventListener("input", auto);
+    bodyInput.addEventListener("input", auto);
     auto();
 }
 
