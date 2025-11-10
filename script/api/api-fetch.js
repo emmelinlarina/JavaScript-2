@@ -30,10 +30,21 @@ export async function apiRequest( path, { method = "GET", body = null, auth = fa
         data = await response.json(); } catch {}
 
     if (!response.ok) {
-        const error = new Error(data?.message || `HTTP ${response.status}`);
+        let msg = `HTTP ${response.status}`;
+        if (data) {
+            const list = Array.isArray(data?.errors)
+                ? data.errors.map((e) => e.message).join(", ")
+                : null
+                msg = list || data?.message || msg;
+        }
+        console.error("API Error:", response.status, data); 
+        const error = new Error(msg);
         error.status = response.status;
         error.data = data;
         throw error;
     }
     return data;
+
+   
 }
+

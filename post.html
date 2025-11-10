@@ -30,18 +30,23 @@
 
             <label class="field">
                 <span>Title</span>
-                <textarea name="body" class="input" rows="4" maxlength="500" placeholder="What's on your mind?"
-                    required></textarea>
+                <textarea name="title" class="input" rows="1" maxlength="80" required></textarea>
+            </label>
+
+            <label class="field">
+                <span>Text</span>
+                <textarea name="body" class="input" rows="4" maxlength="500"
+                    placeholder="What's on your mind?"></textarea>
             </label>
 
             <label class="field">
                 <span>Image URL (optional)</span>
-                <input class="imageUrl" name="input" type="url" placeholder="https://example.com/image.jpg">
+                <input class="imageUrl" name="imageUrl" type="url" placeholder="https://example.com/image.jpg">
             </label>
 
             <label class="field">
-                <span>Image alt text (optional, accessibility)</span>
-                <input class="imageAlt" name="input" type="text" maxlength="120" placeholder="Describe the image">
+                <span>Image alt text (reccommended)</span>
+                <input class="imageAlt" name="imageAlt" type="text" maxlength="120" placeholder="Describe the image">
             </label>
 
             <div class="preview" id="mediaPreview" hidden>

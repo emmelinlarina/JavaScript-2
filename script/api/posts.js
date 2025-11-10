@@ -13,8 +13,8 @@ export function listPosts({ limit = 20, offset = 0, sort = "created", sortOrder 
     return apiRequest(`/social/posts?${qs.toString()}`, { auth: true });
 }
 
-export function createPost({ body, media }) {
-    const payLoad = media ? { body, media } : { body };
+export function createPost({ title, body, media }) {
+    const payLoad = media ? { title, body, media } : { title, body };
     return apiRequest("/social/posts", {
         method: "POST",
         body: payLoad,

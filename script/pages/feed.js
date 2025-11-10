@@ -166,9 +166,11 @@ form?.addEventListener("submit", async (event) => {
 
 
     if (statusEl) statusEl.textContent = "Creating post...";
-    
+
+    const title = body.length > 80 ? body.slice(0, 77) + "..." : body;
+
     try {
-        await createPost({ body });
+        await createPost({ title, body });
         if (input) input.value = "";
         await loadFeed();
         if (statusEl) statusEl.textContent = "Post created";
@@ -380,6 +382,14 @@ async function showComments(postId) {
     }
 }
 
+const toast = localStorage.getItem("toast");
+if (toast && statusEl) {
+    statusEl.textContent = toast;
+    localStorage.removeItem("toast");
+    setTimeout(() => {
+        statusEl.textContent = "";
+    }, 1500);
+}
 
 await ensureApiKey();
 loadFeed();
