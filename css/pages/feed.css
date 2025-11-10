@@ -67,8 +67,8 @@ header {
 /* comments and likes */
 
 .icon-btn { font-size: 1.2rem; border: 0; background: transparent; padding: 6px 5px; border-radius: 10px; cursor: pointer;}
-.icon-btn:hover { background: #292929; color: #e6e6e6;}
 .meta { font-size: 0.85rem; }
+.icon-btn.liked i{ color: gold; transform: scale(1.1); transition: transform 0.2s; }
 
 .btn--sm { padding: 6px 10px; border-radius: 8px; font-size: 0.9rem; }
 .comments {margin-top: 8px; padding-top: 8px; border-top: 1px solid #000;}
