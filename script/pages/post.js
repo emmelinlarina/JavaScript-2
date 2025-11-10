@@ -8,9 +8,9 @@ const form = document.querySelector("#createFull");
 const statusEl = document.querySelector("#status");
 const previewWrap = document.querySelector("#mediaPreview");
 const previewImg = document.querySelector("#previewImg");
+const fileInput = document.querySelector("#imageFile");
 
 const bodyInput =form?.querySelector('[name="body"]');
-const urlInput = form?.querySelector('[name="imageUrl"]');
 const altInput = form?.querySelector('[name="imageAlt"]');
 
 const normalize = (u) => {
@@ -46,13 +46,16 @@ previewImg.onerror = () => {
 };
 }
 
-urlInput.addEventListener("input", (e) => {
-    const val = normalize(e.target.value);
-    if (!val || !/^https:\/\//i.test(val)) {
-        previewWrap.setAttribute("hidden", "");
-        return;
-    }
-    updatePreview(val);
+fileInput.addEventListener("change", async (e) => {
+    const file = fileInput.files?.[0];
+    if (!file) return;
+    const blobUrl = URL.createObjectURL(file);
+    updatePreview(blobUrl);
+
+    const revoke = () => { URL.revokeObjectURL(blobUrl); }
+    previewImg.addEventListener("load", revoke);
+    previewImg.addEventListener("error", revoke);
+
 });
 
 form.addEventListener("submit", async (e) => {
@@ -60,7 +63,7 @@ form.addEventListener("submit", async (e) => {
 
     const title = form.title.value.trim();
     const body = bodyInput?.value.trim() ?? "";
-    const imageUrlRaw = urlInput?.value.trim() ?? "";
+    const file = fileInput?.files?.[0] || null;
     const imageAlt = altInput?.value.trim() ?? "";
 
     if (!title) {
@@ -68,22 +71,54 @@ form.addEventListener("submit", async (e) => {
         return;
     }
 
-    const imageUrl = normalize(imageUrlRaw);
-    const payload =  imageUrl 
-    ? { title, body, media: {url: imageUrl, alt: imageAlt || ""} } 
-    : { title, body };
-
     const btn = form.querySelector("button[type='submit']");
     btn.disabled = true;
-    statusEl.textContent = "Creating post...";
 
     try {
-        await createPost(payload);
-        localStorage.setItem("toast", "Post created");
-        location.href = "index.html";
+        let imageUrl = "";
+
+    if (file) {
+        statusEl.textContent = "Uploading image...";
+        imageUrl = await uploadToCloudinary(file);
+    } else if (imageUrlRaw) {
+        imageUrl = normalize(imageUrlRaw);
+    }
+
+    statusEl.textContent = "Creating post...";
+    
+    const payload =  imageUrl 
+    ? { title, body, media: {url: imageUrl, alt: imageAlt || title || "Image"} } 
+    : { title, body };
+
+    await createPost(payload);
+    localStorage.setItem("toast", "Post created");
+    location.href = "index.html";
     } catch (error) { 
         statusEl.textContent = error.message || "Failed to post.";
     } finally {
         btn.disabled = false;
     }
 });
+
+/*  Cloudinary Upload */
+
+const CLOUDINARY_CLOUD = "du6lu8z3k";
+const CLOUDINARY_PRESET = "social-uploads";
+
+async function uploadToCloudinary(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_PRESET);
+
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+        method: "POST",
+        body: formData
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to upload image");
+    }
+
+    const data = await response.json();
+    return data.secure_url;
+}
