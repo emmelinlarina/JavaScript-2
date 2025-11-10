@@ -72,6 +72,7 @@ function postCard(p) {
     const media = normalizeMediaUrl(p?.media?.url || "");
     const mediaAlt = p?.media?.alt || "";
 
+    const title = escapeHtml(p?.title || "");
     const body = escapeHtml(p?.body || "");
     const likeCount = Array.isArray(p?.reactions) ? p.reactions.reduce((a,r)=>a+(r.count||0),0) : 0;
     const commentCount = Array.isArray(p?.comments) ? p.comments.length : 0;
@@ -93,6 +94,7 @@ function postCard(p) {
                 </div>
             </figure>` : ""}
 
+        ${p.title ? `<h2 class="post-title">${escapeHtml(title)}</h2>` : ""}
         ${body ? `<p class="post-body">${body}</p>` : ""}
 
         <footer class="post-actions">
