@@ -54,3 +54,30 @@ export function createComment(id, body) {
         auth: true,
     });
 }
+
+export async function searchPosts(query, { limit = 50 } = {}) {
+    const params = new URLSearchParams({
+        q: query,
+        limit,
+        _author: "true",
+        _comments: "true",
+        _reactions: "true",
+    });
+
+    try {
+        return await apiRequest(`/social/posts/search?${params.toString()}`, { auth: true });
+    } catch (error) {
+        if (error.status === 404) throw error;
+
+        const list = await apiRequest(`/social/posts?limit=${limit}&_author=true&_comments=true&_reactions=true`, { auth: true });
+        const items = list?.data ?? [];
+        const qlc = String(q || "").toLowerCase();
+        const filtered = items.filter((p) => {
+            const title = (p?.title || "").toLowerCase();
+            const body = (p?.body || "").toLowerCase();
+            const author = (p?._author?.name || "").toLowerCase();
+            return title.includes(qlc) || body.includes(qlc) || author.includes(qlc);
+        });
+        return { data: filtered };
+    }
+}

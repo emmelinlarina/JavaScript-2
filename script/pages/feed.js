@@ -1,6 +1,6 @@
 import { load, logout, save, getLikedSet, saveLikedSet } from "../utils/storage.js";
 import { createApiKey } from "../api/auth.js";  
-import { getPost, listPosts, createPost, reactToPost, createComment, updatePost, deletePost } from "../api/posts.js";  
+import { getPost, listPosts, createPost, reactToPost, createComment, updatePost, deletePost, searchPosts } from "../api/posts.js";  
 
 const user = load();
 if (!user?.accessToken) { location.href = "login.html"; }
@@ -30,6 +30,127 @@ async function ensureApiKey() {
 const titleEl = document.querySelector("[data-greeting]");
 const feedEl = document.querySelector("[data-feed]");
 const statusEl = document.querySelector("[data-status]");
+
+
+
+/* Discover */ 
+
+const modalRoot = document.getElementById("modal-root");
+const discoverBtn = document.getElementById("discoverBtn");
+const searchBtn = document.querySelector(".bottom-nav [data-tab='search']");
+
+function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+async function loadDiscover() {
+    try {
+        statusEl && (statusEl.textContent = "Loading discover");
+        renderSkeletons(3);
+        const data = await listPosts({ limit: 100, sort: "reactions", sortOrder: "desc" });
+        const posts = (data?.data ?? data ?? []);
+        renderPosts(shuffle(posts).slice(0, 20));
+    } catch (error) {
+        statusEl && (statusEl.textContent = error.message || "Failed to load discover");
+    } finally {
+        setTimeout(() => {
+            statusEl && (statusEl.textContent = "");
+        }, 900);
+    }
+}
+
+discoverBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    loadDiscover();
+});
+
+function openSearchModal() {
+    modalRoot.innerHTML = `
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="searchTitle">
+        <div class="modal-bar">
+            <h3 id="searchTitle">Search Posts</h3>
+            <button class="modal-close" data-close aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <form class="modal-search" id="searchModalForm">
+            <input type="search" id="searchModalInput" name="search" aria-label="Search posts" placeholder="Search posts..." autocomplete="off" required>
+            <button class="btn btn--sm" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+
+        <div class="modal-content" data-searchResults>
+
+        </div>
+    </div>
+`;
+
+    modalRoot.removeAttribute("hidden");
+    document.body.classList.add("no-scroll");
+
+    modalRoot.addEventListener("click", (e) => {
+        if (e.target === modalRoot || e.target.closest("[data-close]")) closeModal();
+    }, { once:false });
+    document.addEventListener("keydown", escClose);
+
+
+    const form = modalRoot.querySelector("#searchModalForm");
+    const input = document.getElementById("searchModalInput");
+    const resultsEl = modalRoot.querySelector("[data-searchResults]");
+
+    const renderSearchResults = (posts=[]) => {
+        if (!resultsEl) return;
+        if (!posts.length) {
+            resultsEl.innerHTML = `<p>No results found.</p>`;
+            return;
+        }
+        resultsEl.innerHTML = posts.map(post => postCard(post)).join("");
+        classifyPostImages(resultsEl);
+        attachMediaGuards(resultsEl);
+    };
+
+     async function runSearch(query) {
+    const q = (query || "").trim();
+    if (!q) {
+      resultsEl.innerHTML = `<p style="opacity:.7;padding:.5rem 1rem;">Type to search.</p>`;
+      return;
+    }
+    try {
+      statusEl && (statusEl.textContent = `Searching "${q}"…`);
+      resultsEl.innerHTML = `<div style="padding: .75rem 1rem; opacity:.8;">Searching…</div>`;
+      const result = await searchPosts(q, { limit: 100 });
+      const posts  = result?.data ?? result ?? [];
+      renderSearchResults(posts);
+    } catch (err) {
+      resultsEl.innerHTML = `<p style="color:var(--danger, #c00); padding:.5rem 1rem;">${err.message || "Search failed"}</p>`;
+    } finally {
+      setTimeout(() => statusEl && (statusEl.textContent = ""), 900);
+    }
+  }
+
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    runSearch(input.value);
+  });
+
+
+  let t;
+  input.addEventListener("input", () => {
+    clearTimeout(t);
+    t = setTimeout(() => runSearch(input.value), 250);
+  });
+
+  input.focus();
+}
+
+
+searchBtn?.addEventListener("click", (e) => {
+  e.preventDefault();
+  openSearchModal();
+});
 
 
 function normalizeMediaUrl(u) {
@@ -346,7 +467,6 @@ feedEl.addEventListener("submit", async (e) => {
     }
 });
 
-const modalRoot = document.getElementById("modal-root");
 
 function closeModal() {
     modalRoot.setAttribute("hidden", "");
