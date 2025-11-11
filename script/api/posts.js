@@ -41,7 +41,7 @@ export function deletePost(id) {
 }
 
 export function reactToPost(id) {
-    return apiRequest(`/social/posts/${encodeURIComponent(id)}/react/%E2%AD%90`, {
+    return apiRequest(`/social/posts/${encodeURIComponent(id)}/react/%E2%98%85`, {
         method: "PUT",
         auth: true,
     });

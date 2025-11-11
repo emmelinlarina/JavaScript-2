@@ -1,11 +1,12 @@
-import { load, logout, save } from "../utils/storage.js";
+import { load, logout, save, getLikedSet, saveLikedSet } from "../utils/storage.js";
 import { createApiKey } from "../api/auth.js";  
 import { getPost, listPosts, createPost, reactToPost, createComment } from "../api/posts.js";  
 
 const user = load();
 if (!user?.accessToken) { location.href = "login.html"; }
 
-
+const username = user?.email || user?.id || user?.name || "anon";
+let likedSet = getLikedSet(username) || new Set();
 
 document.getElementById("logoutBtn").addEventListener("click", logout);
 
@@ -53,6 +54,13 @@ const timeAgo = (iso) => {
 const escapeHtml = (str = "") => 
     str.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+function getStarCount(p) {
+  if (!Array.isArray(p?.reactions)) return 0;
+  const r = p.reactions.find(x => x.symbol === "★");
+  return Number(r?.count || 0);
+}
+
+
 function renderEmpty() {
     if (!feedEl) return;
     feedEl.innerHTML = `
@@ -64,25 +72,22 @@ function renderEmpty() {
 } 
 
 function postCard(p) {
+    const isLiked = likedSet.has(String(p.id));
     const author = p?.author?.name || "Unknown";
     const avatarUrl = p?.author?.avatar?.url || "";
+
     const media = normalizeMediaUrl(p?.media?.url || "");
     const mediaAlt = p?.media?.alt || "";
 
     const title = escapeHtml(p?.title || "");
     const body = escapeHtml(p?.body || "");
     
-    const likeCount = Array.isArray(p?.reactions) 
-            ? p.reactions.reduce((a,r)=>a+(r.count||0),0) : 0;
-
-    const liked = Array.isArray(p?.reactions)
-            ? p.reactions.some((r) => r.symbol === "★" && r.count > 0)
-            : false;
+    const likeCount = getStarCount(p);
 
     const commentCount = Array.isArray(p?.comments) ? p.comments.length : 0;
-
     
     return `
+
     <article class="post" data-post="${p.id}">
         <header class="post-header">
             <div class="post-user">
@@ -103,8 +108,8 @@ function postCard(p) {
         ${body ? `<p class="post-body">${body}</p>` : ""}
 
         <footer class="post-actions">
-            <button class="icon-btn" ${liked ? "liked" : ""} data-like="${p.id}" aria-label="Like">
-                <i class="${liked ? "fa-solid" : "fa-regular"} fa-star"></i>
+            <button class="icon-btn ${isLiked ? "liked" : ""}" data-like="${p.id}" aria-label="Like">
+            <i class="${isLiked ? "fa-solid" : "fa-regular"} fa-star"></i>
             </button>
             <span class="meta" data-like-count>${likeCount}</span>
             
@@ -126,30 +131,42 @@ function postCard(p) {
 // likes and comments
 
 feedEl.addEventListener("click", async (e) => {
-    const btn = e.target.closest("[data-like]");
-    if (!btn) return;
+  const btn = e.target.closest("[data-like]");
+  if (!btn) return;
+  if (btn.dataset.busy === "1") return;
+  btn.dataset.busy = "1";
 
-    const id = btn.dataset.like;
-    const icon = btn.querySelector("i");
-    const countEl = btn.parentElement.querySelector("[data-like-count]");
+  const id = String(btn.dataset.like);
+  const icon = btn.querySelector("i");
+  const countEl = btn.parentElement.querySelector("[data-like-count]");
+  const preCount = Number(countEl?.textContent || 0);
 
-    const wasLiked = btn.classList.contains("liked");
-    const prevCount = parseInt(countEl?.textContent || "0", 10);
+  try {
+    await reactToPost(id);
+    let fresh = await getPost(id);
+    let after = getStarCount(fresh?.data ?? fresh);
 
-    btn.classList.toggle("liked");
-    if (icon) { icon.className = `${btn.classList.contains("liked") ? "fa-solid" : "fa-regular"} fa-star`; }
-    if (countEl) countEl.textContent = String(prevCount + (wasLiked ? -1 : 1));
-
-
-    try {
-        await reactToPost(id);
-    } catch (error) {
-        btn.classList.toggle("liked");
-        if (icon) { icon.className = `${btn.classList.contains("liked") ? "fa-solid" : "fa-regular"} fa-star`; }
-        if (countEl) countEl.textContent = String(prevCount);
-        statusEl && (statusEl.textContent = error.message || "Failed to like");
-        setTimeout(() => (statusEl.textContent = ""), 1500);
+    if (after < preCount) {
+      await reactToPost(id);
+      fresh = await getPost(id);
+      after = getStarCount(fresh?.data ?? fresh);
     }
+
+    btn.classList.add("liked");
+    if (icon) icon.className = "fa-solid fa-star";
+    if (countEl) countEl.textContent = String(after);
+    likedSet.add(id);
+    saveLikedSet(likedSet, username);
+    
+  } catch (err) {
+
+    btn.classList.remove("liked");
+    if (icon) icon.className = "fa-regular fa-star";
+    statusEl && (statusEl.textContent = err.message || "Failed to like");
+    setTimeout(() => (statusEl.textContent = ""), 1500);
+  } finally {
+    delete btn.dataset.busy;
+  }
 });
 
 
@@ -161,7 +178,6 @@ function renderPosts(posts=[]) {
     classifyPostImages(feedEl);
     attachMediaGuards(feedEl);
 }
-
 
 async function loadFeed() {
     if (statusEl) statusEl.textContent = "Loading feed";

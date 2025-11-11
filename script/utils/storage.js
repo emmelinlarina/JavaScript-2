@@ -24,3 +24,20 @@ export function logout() {
     localStorage.removeItem(STORAGE_KEY);
     location.href = "auth.html";
 }
+
+export function getLikedSet(username = "anon") {
+    try {
+        const raw = localStorage.getItem(`likedPosts:${username}`) || "[]";
+        const arr = JSON.parse(raw);
+        return new Set((arr || []).map(String));
+    } catch {
+        return new Set();
+    }
+}
+
+export function saveLikedSet(set, username = "anon") {
+    try {
+        localStorage.setItem(`likedPosts:${username}`, JSON.stringify(Array.from(set, String)));
+    } catch { }
+}
+
