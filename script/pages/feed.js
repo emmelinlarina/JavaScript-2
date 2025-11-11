@@ -1,6 +1,6 @@
 import { load, logout, save, getLikedSet, saveLikedSet } from "../utils/storage.js";
 import { createApiKey } from "../api/auth.js";  
-import { getPost, listPosts, createPost, reactToPost, createComment } from "../api/posts.js";  
+import { getPost, listPosts, createPost, reactToPost, createComment, updatePost, deletePost } from "../api/posts.js";  
 
 const user = load();
 if (!user?.accessToken) { location.href = "login.html"; }
@@ -72,9 +72,10 @@ function renderEmpty() {
 } 
 
 function postCard(p) {
-    const isLiked = likedSet.has(String(p.id));
+    
     const author = p?.author?.name || "Unknown";
     const avatarUrl = p?.author?.avatar?.url || "";
+    const isOwner = user?.name && p?.author?.name && user.name === p.author.name;
 
     const media = normalizeMediaUrl(p?.media?.url || "");
     const mediaAlt = p?.media?.alt || "";
@@ -83,7 +84,7 @@ function postCard(p) {
     const body = escapeHtml(p?.body || "");
     
     const likeCount = getStarCount(p);
-
+    const isLiked = likedSet.has(String(p.id));
     const commentCount = Array.isArray(p?.comments) ? p.comments.length : 0;
     
     return `
@@ -95,6 +96,12 @@ function postCard(p) {
                 <strong>${escapeHtml(author)}</strong>
             </div>
             <time class="post-time" datetime="${p.created}">${timeAgo(p.created)}</time>
+            ${isOwner ? `
+                <div class="owner-tools">
+                <button class="link-btn" data-edit="${p.id}" aria-label="Edit post"><i class="fa-solid fa-pen"></i></button>
+                <button class="link-btn danger" data-delete="${p.id}" aria-label="Delete post"><i class="fa-solid fa-trash"></i></button>
+                </div>` : ""}
+
         </header>
 
         ${media ? `
@@ -157,7 +164,7 @@ feedEl.addEventListener("click", async (e) => {
     if (countEl) countEl.textContent = String(after);
     likedSet.add(id);
     saveLikedSet(likedSet, username);
-    
+
   } catch (err) {
 
     btn.classList.remove("liked");
@@ -168,7 +175,6 @@ feedEl.addEventListener("click", async (e) => {
     delete btn.dataset.busy;
   }
 });
-
 
 
 function renderPosts(posts=[]) {
@@ -231,6 +237,8 @@ form?.addEventListener("submit", async (event) => {
         if (btn) btn.disabled = false;
     }
 });
+
+
 
 const fab = document.getElementById("openCreate");
 fab?.addEventListener("click", () => { bodyInput?.focus(); });
@@ -432,6 +440,98 @@ async function showComments(postId) {
         }, 1500);
     }
 }
+
+// delete post
+
+feedEl.addEventListener("click", async (e) => {
+    const del = e.target.closest("[data-delete]");
+    if (!del) return;
+
+    const id = del.dataset.delete;
+    if (!confirm("Delete?")) return;
+
+    try {
+        await deletePost(id);
+        await loadFeed();
+        if (statusEl) statusEl.textContent = "Post deleted";
+    } catch (error) {
+        if (statusEl) statusEl.textContent = error.message || "Failed to delete post";
+        setTimeout(() => {
+            if (statusEl) statusEl.textContent = "";
+        }, 1500);
+    }
+});
+
+// edit post
+
+feedEl.addEventListener("click", async (e) => {
+    const edit = e.target.closest("[data-edit]");
+    if (!edit) return;
+
+    const id = edit.dataset.edit;
+    try {
+        const res = await getPost(id);
+        const post = res?.data ?? res;
+        openEditModal(post);
+    } catch (error) {
+        if (statusEl) statusEl.textContent = error.message || "Failed to load post";
+        setTimeout(() => {
+            if (statusEl) statusEl.textContent = "";
+        }, 1500);
+    }
+});
+
+function openEditModal(post) {
+  modalRoot.innerHTML = `
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+      <div class="modal-bar">
+        <h3 id="editTitle">Edit Post</h3>
+        <button class="modal-close" data-close aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form class="modal-content" data-edit-form data-post="${post.id}">
+        <label class="field">
+          <span>Title</span>
+          <input type="text" name="title" value="${escapeHtml(post.title || "")}" maxlength="80">
+        </label>
+        <label class="field" style="margin-top:8px">
+          <span>Body</span>
+          <textarea name="body" rows="4">${escapeHtml(post.body || "")}</textarea>
+        </label>
+        <div style="display:flex; gap:8px; margin-top:12px;">
+          <button class="btn btn--sm" type="submit">Save</button>
+          <button class="btn btn--sm btn--ghost" type="button" data-close>Cancel</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  modalRoot.removeAttribute("hidden");
+  document.body.classList.add("no-scroll");
+  modalRoot.addEventListener("click", (e) => {
+    if (e.target === modalRoot || e.target.closest("[data-close]")) closeModal();
+  }, { once:false });
+  document.addEventListener("keydown", escClose);
+
+  const form = modalRoot.querySelector("[data-edit-form]");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = form.dataset.post;
+    const title = form.title.value.trim();
+    const body  = form.body.value.trim();
+    try {
+      await updatePost(id, { title, body });
+      closeModal();
+      await loadFeed();
+      statusEl && (statusEl.textContent = "Post updated");
+      setTimeout(() => (statusEl.textContent = ""), 1200);
+    } catch (err) {
+      statusEl && (statusEl.textContent = err.message || "Failed to update");
+      setTimeout(() => (statusEl.textContent = ""), 1500);
+    }
+  });
+}
+
 
 const toast = localStorage.getItem("toast");
 if (toast && statusEl) {
