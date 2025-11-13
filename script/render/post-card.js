@@ -16,23 +16,25 @@ export function postCard(p, { currentUserName, likedSet }) {
     
     const likeCount = getStarCount(p);
     const isLiked = likedSet.has(String(p.id));
-    const commentCount = Array.isArray(p?.comments) ? p.comments.length : 0;
+    const postUrl = `single-post.html?id=${encodeURIComponent(p.id)}`;
     
     return `
 
     <article class="post" data-post="${p.id}">
+
         <header class="post-header">
             <div class="post-user">
                 <span class="post-avatar" ${avatarUrl ? `style="background-image:url('${avatarUrl}')"` : ""}></span>
                 <strong>${escapeHtml(author)}</strong>
             </div>
+
             <time class="post-time" datetime="${p.created}">${timeAgo(p.created)}</time>
+            
             ${isOwner ? `
                 <div class="owner-tools">
-                <button class="link-btn" data-edit="${p.id}" aria-label="Edit post"><i class="fa-solid fa-pen"></i></button>
-                <button class="link-btn danger" data-delete="${p.id}" aria-label="Delete post"><i class="fa-solid fa-trash"></i></button>
+                    <button class="link-btn" data-edit="${p.id}" aria-label="Edit post"><i class="fa-solid fa-pen"></i></button>
+                    <button class="link-btn danger" data-delete="${p.id}" aria-label="Delete post"><i class="fa-solid fa-trash"></i></button>
                 </div>` : ""}
-
         </header>
 
         ${mediaUrl ? `
@@ -42,7 +44,7 @@ export function postCard(p, { currentUserName, likedSet }) {
                 </div>
             </figure>` : ""}
 
-        ${p.title ? `<h2 class="post-title">${escapeHtml(title)}</h2>` : ""}
+        ${p.title ? `<h2 class="post-title"><a class="post-link" href="${postUrl}" data-post-link>${escapeHtml(p.title)}</a></h2>` : ""}
         ${body ? `<p class="post-body">${body}</p>` : ""}
 
         <footer class="post-actions">

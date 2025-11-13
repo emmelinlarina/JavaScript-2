@@ -230,6 +230,17 @@ modalRoot.addEventListener("click", (e) => {
     });
 }
 
+feedEl.addEventListener("click", async (e) => {
+    if (e.target.closest("button, a[data-post-link], [data-like], [data-comment], [data-edit], [data-delete], input, textarea, form")) {
+        return;
+    }
+    const card = e.target.closest("article.post");
+    if (!card) return;
+    const id = card.dataset.post;
+    if (id) location.href = `single-post.html?id=${encodeURIComponent(id)}`;
+});
+   
+
 // Edit / delete post
 
 feedEl.addEventListener("click", async (e) => {

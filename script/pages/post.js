@@ -12,6 +12,7 @@ const fileInput = document.querySelector("#imageFile");
 
 const bodyInput =form?.querySelector('[name="body"]');
 const altInput = form?.querySelector('[name="imageAlt"]');
+const urlInput = form?.querySelector('[name="imageUrl"]');
 
 const normalize = (u) => {
     if (!u) return "";
@@ -65,6 +66,7 @@ form.addEventListener("submit", async (e) => {
     const body = bodyInput?.value.trim() ?? "";
     const file = fileInput?.files?.[0] || null;
     const imageAlt = altInput?.value.trim() ?? "";
+    const imageUrlRaw = urlInput?.value.trim() ?? "";
 
     if (!title) {
         statusEl.textContent = "Post title is required.";

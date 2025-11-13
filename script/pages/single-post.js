@@ -12,12 +12,14 @@ if (!user?.accessToken) location.href = "login.html";
 
 const statusEl = document.querySelector("[data-status]");
 const titleEl = document.querySelector("[data-greeting]");
-const root = document.querySelector("[data-single]");
-const modalRoot = document.querySelector("modal-root");
+const root = document.querySelector("[data-post]");
+const modalRoot = document.getElementById("modal-root");
+const logoutBtn = document.getElementById("logoutBtn");
 
-document.getElementById("logoutBtn")?.addEventListener("click", logout);
-    if (titleEl) titleEl.textContent = user?.name || "Friend";
-    if (modalRoot) mountModal(modalRoot);
+
+if (logoutBtn) logoutBtn.addEventListener("click", logout);
+if (titleEl) titleEl.textContent = user?.name || "Friend";
+if (modalRoot) mountModal(modalRoot);
 
     const params = new URLSearchParams(location.search);
     const postId = params.get("id");
