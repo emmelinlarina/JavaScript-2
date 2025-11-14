@@ -128,6 +128,18 @@ async function loadProfilePage() {
     }
 }
 
+feedEl.addEventListener("click", (e) => {
+    if (e.target.closest("button, a, [data-like], [data-edit], [data-delete], input, textarea, form")) {
+        return;
+    } 
+
+    const card = e.target.closest("article.post");
+    if (!card) return;
+    const id = card.dataset.post;
+    if (!id) location.href = `single-post.html?id=${encodeURIComponent(id)}`;
+});
+
+
 followBtn?.addEventListener("click", async () => {
     const isFollowing = followBtn.dataset.following === "true";
 
