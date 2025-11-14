@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/pages/feed.css">
     <link rel="stylesheet" href="css/pages/profile.css">
 
     <script src="https://kit.fontawesome.com/e0e8f3b90b.js" crossorigin="anonymous"></script>
@@ -21,12 +22,40 @@
 <body>
 
 
-    <header>
+    <header></header>
 
-    </header>
+    <main class="container profile" data-profile-root>
+        <p class="status" data-status></p>
 
-    <main>
+        <section class="profile-header">
+            <div class="profile-avatar" data-avatar></div>
+            <div class="profile-main">
+                <h1 class="profile-username" data-profile-name></h1>
+                <p class="profile-email" data-profile-email></p>
+                <p class="profile-bio" data-profile-bio></p>
+            </div>
+        </section>
 
+        <section class="profile-stats">
+            <div>
+                <span data-count-posts aria-label="posts">0</span>
+                <span>Posts</span>
+            </div>
+            <div>
+                <span data-count-followers aria-label="followers">0</span>
+                <span>Followers</span>
+            </div>
+            <div>
+                <span data-count-following aria-label="following">0</span>
+                <span>Following</span>
+            </div>
+            <button class="btn btn--sm" id="followBtn" aria-label="follow" hidden>Follow</button>
+        </section>
+
+        <section class="profile-posts">
+            <h2 class="h4">Posts</h2>
+            <section class="feed-list" data-feed></section>
+        </section>
     </main>
 
     <footer></footer>
@@ -39,6 +68,8 @@
         <a href="profile.html" data-tab="profile"><i class="fa-solid fa-circle-user"></i></a>
         <button id="logoutBtn" class="btn btn-signout"><i class="fa-solid fa-right-from-bracket"></i></button>
     </nav>
+
+    <div id="modal-root" hidden></div>
 
 
     <script type="module" src="script/api/api-fetch.js"></script>

@@ -5,6 +5,7 @@ import { getStarCount } from "../utils/interactions.js";
 export function postCard(p, { currentUserName, likedSet }) {
 
     const author = p?.author?.name || "Unknown";
+    const profileUrl = `profile.html?name=${encodeURIComponent(author)}`;
     const avatarUrl = p?.author?.avatar?.url || "";
     const isOwner = currentUserName && p?.author?.name && currentUserName === p.author.name;
 
@@ -25,7 +26,11 @@ export function postCard(p, { currentUserName, likedSet }) {
         <header class="post-header">
             <div class="post-user">
                 <span class="post-avatar" ${avatarUrl ? `style="background-image:url('${avatarUrl}')"` : ""}></span>
-                <strong>${escapeHtml(author)}</strong>
+                <strong>
+                    <a href="${profileUrl}" class="post-author-link">
+                    ${escapeHtml(author)}
+                    </a>
+                </strong>
             </div>
 
             <time class="post-time" datetime="${p.created}">${timeAgo(p.created)}</time>
