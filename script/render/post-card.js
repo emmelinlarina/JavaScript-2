@@ -33,7 +33,7 @@ export function postCard(p, { currentUserName, likedSet }) {
                 </strong>
             </div>
 
-            <time class="post-time" datetime="${p.created}">${timeAgo(p.created)}</time>
+            
             
             ${isOwner ? `
                 <div class="owner-tools">
@@ -49,8 +49,12 @@ export function postCard(p, { currentUserName, likedSet }) {
                 </div>
             </figure>` : ""}
 
+        <time class="post-time" datetime="${p.created}">${timeAgo(p.created)}</time>
+        
         ${p.title ? `<h2 class="post-title"><a class="post-link" href="${postUrl}" data-post-link>${escapeHtml(p.title)}</a></h2>` : ""}
         ${body ? `<p class="post-body">${body}</p>` : ""}
+
+        
 
         <footer class="post-actions">
             <button class="icon-btn ${isLiked ? "liked" : ""}" data-like="${p.id}" aria-label="Like">

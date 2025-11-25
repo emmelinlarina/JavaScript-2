@@ -32,6 +32,8 @@ header {
     .create-post .input { grid-column: 1/2; }
 }
 
+
+
 /* FEED */
 
 .post {  
@@ -54,7 +56,12 @@ header {
     border: 1px solid #a7a7a7;
 }
 
-.post-time { font-size: 0.75rem; color: #6b7280; }
+.post-time { 
+    display: block;
+    font-size: 0.75rem; color: #6b7280;
+    text-align: right;
+    margin: 4px 6px 0;
+}
 
 .post-title {
     margin: 4px 5px;
@@ -86,6 +93,8 @@ header {
     display: flex; align-items: center; gap: 8px;
     margin-top: 6px; color: #6b7280;
 }
+
+
 /* owner tools */
 
 .owner-tools { display: flex; gap: 4px; align-items: center; }
@@ -141,6 +150,15 @@ header {
 .modal-form .input { width: 100%; }
 
 body.no-scroll { overflow: hidden; }
+
+
+.modal-search {
+    display: grid;
+    gap: 12px;
+    margin: 0 20px;
+}
+
+
 
 /* ---------------------------------------------------------- */
 

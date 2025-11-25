@@ -8,6 +8,13 @@
     height: 60px; padding: 0 20px; z-index: 50;
 }
 
+@media (min-width: 768px) {
+    .bottom-nav {
+        max-width: 720px;
+        margin: 0 auto;
+    }
+}
+
 .bottom-nav a, .bottom-nav button {
     display: grid; place-items: center;
     color: #111827; text-decoration: none;
