@@ -1,3 +1,4 @@
+import { getProfile, getProfilePosts } from "../api/profiles.js";
 import { wireLikes, wireComments } from "../utils/interactions.js";
 import { setStatus, renderSkeletons} from "../utils/ui.js";
 import { classifyPostImages, attachMediaGuards } from "../utils/media.js";
@@ -49,7 +50,7 @@ const searchBtn = document.querySelector(".bottom-nav [data-tab='search']");
 if (modalRoot) mountModal(modalRoot);
 if (titleEl) titleEl.textContent = user?.name ? `${user.name}` : "Friend";
 
-// Discover
+// Discover Feed
 
 function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -61,20 +62,55 @@ function shuffle(arr) {
 
 async function loadDiscover() {
     try {
-        setStatus(statusEl, "Loading discover", 900);
+        setStatus(statusEl);
         renderSkeletons(feedEl, 3);
-        const data = await listPosts({ limit: 100, sort: "reactions", sortOrder: "desc" });
-        const posts = (data?.data ?? data ?? []);
+        
+        const data = await listPosts({ limit: 100 });
+        let posts = (data?.data ?? data ?? []);
+
+        posts = shuffle(posts);
+
         renderPosts(shuffle(posts).slice(0, 20));
     } catch (error) {
         setStatus(statusEl, error.message || "Failed to load discover", 1500);
     }
 }
 
-discoverBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    loadDiscover();
-});
+// Friends Feed
+
+async function loadFriendsFeed() {
+    try {
+        setStatus(statusEl);
+        renderSkeletons(feedEl, 3);
+
+        const profileRes = await getProfile(user.name);
+        const profile = profileRes?.data || profileRes || {};
+        const following = profile.following ?? [];
+
+        if (!following.length) {
+            feedEl.innerHTML = `
+            <div class="feed-empty">
+                <p>You are not following anyone yet.</p>
+                <p>Find and follow profiles to see their posts here.</p>
+            </div>`;
+            setStatus(statusEl, "", 0);
+            return;
+        }
+
+        const results = await Promise.all(
+            following.map(f => getProfilePosts(f.name, { limit: 10 }))
+        );
+
+        let posts = results.flatMap(r => r?.data ?? r ?? []);
+        posts.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
+
+        renderPosts(posts);
+        setStatus(statusEl, "", 0);
+    } catch (error) {
+        console.error("Failed to load friends feed:", error);
+        setStatus(statusEl, error.message || "Failed to load friends feed", 1500);
+    }
+}
 
 
 // Search modal
@@ -371,10 +407,22 @@ if (bodyInput && bodyInput.tagName === "TEXTAREA") {
     auto();
 }
 
+// tabs: recent, friends, discover
+
 document.querySelectorAll(".feed-tabs .chip").forEach((btn) => {
     btn.addEventListener("click", () => {
+        const filter = btn.dataset.filter;
+
         document.querySelectorAll(".feed-tabs .chip").forEach((b) => b.classList.remove("is-active"));
         btn.classList.add("is-active");
+
+        if (filter === "Recent") {
+            loadFeed();
+        } else if (filter === "Friends") {
+            loadFriendsFeed();
+        } else if (filter === "Discover") {
+            loadDiscover();
+        }
     });
 });
 
