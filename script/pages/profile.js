@@ -13,6 +13,7 @@ if (!user?.accessToken) location.href = "login.html";
 const root = document.querySelector("[data-profile-root]");
 const statusEl = document.querySelector("[data-status]");
 const avatarEl = document.querySelector("[data-avatar]");
+const bannerEl = document.querySelector("[data-banner]");
 const nameEl = document.querySelector("[data-profile-name]");
 const emailEl = document.querySelector("[data-profile-email]");
 const bioEl = document.querySelector("[data-profile-bio]");
@@ -42,6 +43,16 @@ function renderProfileInfo(profile) {
     if (nameEl) nameEl.textContent = profile.name || "Unknown";
     if (emailEl) emailEl.textContent = profile.email || "";
     if (bioEl) bioEl.textContent = profile.bio || "No bio yet";
+
+    if (bannerEl) {
+        if (profile.banner?.url) {
+            bannerEl.style.backgroundImage = `url('${profile.banner.url}')`;
+            bannerEl.classList.add("has-banner");
+        } else {
+            bannerEl.style.backgroundImage = "";
+            bannerEl.classList.remove("has-banner");
+        }
+    }
 
     if (avatarEl) {
         if (profile.avatar?.url) {
