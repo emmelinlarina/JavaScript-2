@@ -1,3 +1,4 @@
+import { setStatus } from "../utils/ui.js";
 import { apiRequest } from "./api-fetch.js";
 // import 
 
@@ -46,3 +47,17 @@ export function unfollowProfile(name) {
         { method: "PUT", auth: true }
     );
 }
+
+// edit profile
+
+export function updateProfile(name, payload) {
+    return apiRequest(
+        `/social/profiles/${encodeURIComponent(name)}`,
+        {
+            method: "PUT",
+            body: payload,
+            auth: true,
+        }
+    );
+}
+
