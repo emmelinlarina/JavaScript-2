@@ -35,6 +35,11 @@
     border-radius: 50%;
     object-fit: cover;
     border: 4px solid #fff;
+
+    background-color: #e5e7eb;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .profile-main {

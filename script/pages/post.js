@@ -1,6 +1,6 @@
 import { load } from "../utils/storage.js";
 import { createPost } from "../api/posts.js";
-import { uploadImage } from "../utils/media.js";
+import { uploadImage } from "../utils/uploads.js";
 
 const user = load();
 if (!user?.accessToken) location.href = "login.html"; 
