@@ -6,6 +6,7 @@ import { postCard } from "../render/post-card.js";
 import { getPost, createComment, reactToPost } from "../api/posts.js";
 import { getProfile, getProfilePosts, followProfile, unfollowProfile, updateProfile } from "../api/profiles.js";
 import { mount as mountModal, close as closeModal } from "../utils/modal.js";
+import { uploadImage } from "../utils/uploads.js";  
 
 const user = load();
 if (!user?.accessToken) location.href = "login.html";
@@ -194,30 +195,78 @@ followBtn?.addEventListener("click", async () => {
 
 function openEditProfileModal(profile) {
     if (!modalRoot) return;
+
     modalRoot.innerHTML = `
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editProfileTitle">
         <div class="modal-bar">
-            <h3 id="editProfileTitle">Edit Profile</h3>
-            <button class="modal-close" data-close><i class="fa-solid fa-xmark"></i></button>
+            <h3 id="editProfileTitle">Edit profile</h3>
+            <button class="modal-close" data-close aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
 
-        <form class="modal-content" data-edit-profile>
-            <label class="field">
-                <span>Bio</span>
-                <textarea name="bio" rows="3" maxlength="160">${profile.bio || ""}</textarea>
-            </label>
+        <form class="modal-content profile-edit" data-edit-profile>
+            <section class="profile-edit-section">
+                <h4 class="profile-edit-heading">Profile info</h4>
+                <label class="field">
+                    <span>Bio</span>
+                    <textarea name="bio" rows="3" maxlength="160"
+                        placeholder="Write a short bio...">${profile.bio || ""}</textarea>
+                </label>
+            </section>
 
-            <label class="field">
-                <span>Avatar URL</span>
-                <input type="url" name="avatar" value="${profile.avatar?.url || ""}" />
-            </label>
+            <section class="profile-edit-section">
+                <h4 class="profile-edit-heading">Images</h4>
 
-            <label class="field">
-                <span>Banner URL</span>
-                <input type="url" name="banner" value="${profile.banner?.url || ""}" />
-            </label>
+                <div class="profile-edit-grid">
+                    <!-- AVATAR -->
+                    <div class="profile-edit-card">
+                        <h5>Avatar</h5>
+                        <div class="profile-edit-preview profile-edit-preview--avatar"
+                             data-preview="avatar"
+                             style="${profile.avatar?.url ? `background-image:url('${profile.avatar.url}')` : ""}">
+                        </div>
 
-            <button class="btn btn--sm" type="submit" data-save>Save</button>
+                        <label class="field field--sm">
+                            <span>Upload image</span>
+                            <input type="file" name="avatarFile" accept="image/*">
+                        </label>
+
+                        <label class="field field--sm">
+                            <span>Or use image URL</span>
+                            <input type="url" name="avatar"
+                                   placeholder="https://..."
+                                   value="${profile.avatar?.url || ""}">
+                        </label>
+                    </div>
+
+                    <!-- BANNER -->
+                    <div class="profile-edit-card">
+                        <h5>Banner</h5>
+                        <div class="profile-edit-preview profile-edit-preview--banner"
+                             data-preview="banner"
+                             style="${profile.banner?.url ? `background-image:url('${profile.banner.url}')` : ""}">
+                        </div>
+
+                        <label class="field field--sm">
+                            <span>Upload image</span>
+                            <input type="file" name="bannerFile" accept="image/*">
+                        </label>
+
+                        <label class="field field--sm">
+                            <span>Or use image URL</span>
+                            <input type="url" name="banner"
+                                   placeholder="https://..."
+                                   value="${profile.banner?.url || ""}">
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <div class="profile-edit-actions">
+                <button type="button" class="btn btn--sm btn--ghost" data-close>Cancel</button>
+                <button class="btn btn--sm" type="submit" data-save>Save changes</button>
+            </div>
         </form>
     </div>
     `;
@@ -225,30 +274,68 @@ function openEditProfileModal(profile) {
     modalRoot.removeAttribute("hidden");
     document.body.classList.add("no-scroll");
 
-    modalRoot.addEventListener(
-        "click",
-        (e) => {
-            if (e.target === modalRoot || e.target.closest("[data-close]")) closeModal();
-        },
-        { once: true }
-    );
+    
+    modalRoot.onclick = (e) => {
+        if (e.target === modalRoot || e.target.closest("[data-close]")) {
+            closeModal();
+            modalRoot.onclick = null;
+        }
+    };
 
     const form = modalRoot.querySelector("[data-edit-profile]");
+    const avatarPreview = form.querySelector("[data-preview='avatar']");
+    const bannerPreview = form.querySelector("[data-preview='banner']");
+
+    
+    const wirePreview = (input, previewEl, shape = "square") => {
+        if (!input || !previewEl) return;
+        input.addEventListener("change", () => {
+            const file = input.files?.[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+            previewEl.style.backgroundImage = `url('${url}')`;
+            
+            previewEl.onload = () => URL.revokeObjectURL(url);
+        });
+    };
+
+    wirePreview(form.avatarFile, avatarPreview);
+    wirePreview(form.bannerFile, bannerPreview);
+
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const bio = form.bio.value.trim();
-        const avatar = form.avatar.value.trim();
-        const banner = form.banner.value.trim();
+
+        const avatarFile   = form.avatarFile?.files?.[0] || null;
+        const bannerFile   = form.bannerFile?.files?.[0] || null;
+        const avatarUrlRaw = form.avatar?.value.trim() || "";
+        const bannerUrlRaw = form.banner?.value.trim() || "";
 
         const payload = { bio };
-        if (avatar) payload.avatar = { url: avatar };
-        if (banner) payload.banner = { url: banner };
 
         try {
             setStatus(statusEl, "Saving profile...", 0);
+
+            if (avatarFile) {
+                const url = await uploadImage(avatarFile);
+                payload.avatar = { url };
+            } else if (avatarUrlRaw) {
+                payload.avatar = { url: avatarUrlRaw };
+            }
+
+            if (bannerFile) {
+                const url = await uploadImage(bannerFile);
+                payload.banner = { url };
+            } else if (bannerUrlRaw) {
+                payload.banner = { url: bannerUrlRaw };
+            }
+
             await updateProfile(profileName, payload);
+
             closeModal();
+            modalRoot.onclick = null;
+
             await loadProfilePage();
             setStatus(statusEl, "Profile updated!", 1500);
         } catch (error) {
