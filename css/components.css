@@ -1,0 +1,33 @@
+.btn {
+    appearance: none; 
+    border: none; border-radius: 12px; 
+    cursor: pointer;
+    padding: 10px 14px; 
+    font-family: Poppins, Roboto, sans-serif; font-weight: 600;
+    background: #2c2c2c; color: #fff; 
+}
+
+.btn:disabled {
+    opacity: 0.6; cursor: not-allowed;
+}
+
+.chip {
+    padding: 8px 12px; 
+    border-radius: 12px; border: none; 
+    font-weight: 600; font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.chip.is-active {
+    background: #111827; border-color: #111827; color: #fff;
+}
+
+.input {
+    width: 100%; padding: 10px 12px; 
+    border: 2px solid #d1d5db; border-radius: 12px; 
+    padding: 10px 12px; outline: none; resize: none;
+}
+
+.input:focus {
+    border-color: #686868; background: #fff;
+}

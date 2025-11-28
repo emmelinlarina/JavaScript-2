@@ -1,0 +1,31 @@
+.bottom-nav {
+    font-size: 1.5rem;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #fff; border-top: 1px solid #e5e7eb;
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    align-items: center; 
+    height: 60px; padding: 0 20px; z-index: 50;
+}
+
+@media (min-width: 768px) {
+    .bottom-nav {
+        max-width: 720px;
+        margin: 0 auto;
+    }
+}
+
+.bottom-nav a, .bottom-nav button {
+    display: grid; place-items: center;
+    color: #111827; text-decoration: none;
+    background: none; border: none;
+}
+
+.fab {
+    font-weight: 800; font-size: 1.5rem;
+    border-radius: 50%; background: #111827; color: #fff;
+}
+
+.btn-signout {
+    font-size: 1.5rem;
+}
