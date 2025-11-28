@@ -18,6 +18,7 @@ export function postCard(p, { currentUserName, likedSet }) {
     const likeCount = getStarCount(p);
     const isLiked = likedSet.has(String(p.id));
     const postUrl = `single-post.html?id=${encodeURIComponent(p.id)}`;
+    const tags = Array.isArray(p?.tags) ? p.tags : [];
     
     return `
 
@@ -54,7 +55,10 @@ export function postCard(p, { currentUserName, likedSet }) {
         ${p.title ? `<h2 class="post-title"><a class="post-link" href="${postUrl}" data-post-link>${escapeHtml(p.title)}</a></h2>` : ""}
         ${body ? `<p class="post-body">${body}</p>` : ""}
 
-        
+        ${tags.length ? ` 
+            <ul class="post-tags">
+                ${tags.map(tag => `<li class="post-tag">#${escapeHtml(tag)}</li>`).join("")}
+            </ul>` : ""}
 
         <footer class="post-actions">
             <button class="icon-btn ${isLiked ? "liked" : ""}" data-like="${p.id}" aria-label="Like">

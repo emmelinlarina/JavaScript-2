@@ -366,26 +366,41 @@ function openEditModal(post) {
 const form = document.getElementById("createPost");
 const bodyInput = form?.querySelector('[name="body"]');
 const titleInput = form?.querySelector('[name="title"]');
+const tagsInput = form?.querySelector('[name="tags"]');
 
 form?.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     let title = titleInput?.value.trim() || "";
-    let body = bodyInput?.value.trim() || "";
+    const body = bodyInput?.value.trim() || "";
 
-    if (!title) { title = body.split("").slice(0, 4).join(""); }
+    
+    const tagsRaw = tagsInput?.value || "";
+    const tags = tagsRaw
+        .split(",")
+        .map((t) => t.trim().replace(/^#/, ""))
+        .filter(Boolean);
+
+    if (!title) {
+        title = body.split("").slice(0, 40).join(""); 
+    }
     if (!title) return;
     if (title.length > 80) title = title.slice(0, 80);
 
-    const btn = form.querySelector("button") || form.querySelector('input[type="submit"]');
+    const btn =
+        form.querySelector("button[type='submit']") ||
+        form.querySelector("button") ||
+        form.querySelector('input[type="submit"]');
 
     if (btn) btn.disabled = true;
     setStatus(statusEl, "Creating post...", 0);
 
     try {
-        await createPost({ title, body });
+        await createPost({ title, body, tags });
         if (titleInput) titleInput.value = "";
         if (bodyInput) bodyInput.value = "";
+        if (tagsInput) tagsInput.value = "";
+
         await loadFeed();
         setStatus(statusEl, "Post created", 1200);
     } catch (error) {
@@ -407,7 +422,7 @@ if (bodyInput && bodyInput.tagName === "TEXTAREA") {
     auto();
 }
 
-// tabs: recent, friends, discover
+
 
 document.querySelectorAll(".feed-tabs .chip").forEach((btn) => {
     btn.addEventListener("click", () => {

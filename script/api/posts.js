@@ -13,8 +13,12 @@ export function listPosts({ limit = 20, offset = 0, sort = "created", sortOrder 
     return apiRequest(`/social/posts?${qs.toString()}`, { auth: true });
 }
 
-export function createPost({ title, body, media }) {
-    const payLoad = media ? { title, body, media } : { title, body };
+export function createPost({ title, body, media,tags }) {
+    const payLoad = { title, body };
+
+    if (media) payLoad.media = media;
+    if (Array.isArray(tags) && tags.length) payLoad.tags = tags;
+    
     return apiRequest("/social/posts", {
         method: "POST",
         body: payLoad,
@@ -69,15 +73,27 @@ export async function searchPosts(query, { limit = 50 } = {}) {
     } catch (error) {
         if (error.status === 404) throw error;
 
-        const list = await apiRequest(`/social/posts?limit=${limit}&_author=true&_comments=true&_reactions=true`, { auth: true });
+        const list = await apiRequest(
+            `/social/posts?limit=${limit}&_author=true&_comments=true&_reactions=true`,
+            { auth: true }
+        );
         const items = list?.data ?? [];
-        const qlc = String(q || "").toLowerCase();
+        const qlc = String(query || "").toLowerCase();
+
         const filtered = items.filter((p) => {
             const title = (p?.title || "").toLowerCase();
             const body = (p?.body || "").toLowerCase();
             const author = (p?._author?.name || "").toLowerCase();
-            return title.includes(qlc) || body.includes(qlc) || author.includes(qlc);
+            const tagsText = (Array.isArray(p?.tags) ? p.tags : []).join(" ").toLowerCase();
+
+            return (
+                title.includes(qlc) ||
+                body.includes(qlc) ||
+                author.includes(qlc) ||
+                tagsText.includes(qlc)
+            );
         });
+
         return { data: filtered };
     }
 }
