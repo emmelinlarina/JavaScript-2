@@ -3,8 +3,8 @@ import { setStatus, renderSkeletons } from "../utils/ui.js";
 import { classifyPostImages, attachMediaGuards } from "../utils/media.js";
 import { mount as mountModal, close as closeModal} from "../utils/modal.js";
 import { postCard } from "../render/post-card.js";
-import { wireLikes, wireComments } from "../utils/interactions.js";
-import { escapeHtml, timeAgo } from "../utils/format.js";
+import { wireLikes } from "../utils/interactions.js";
+import { escapeHtml, timeAgo, formatDateTime } from "../utils/format.js";
 import { getPost, reactToPost, createComment, updatePost, deletePost } from "../api/posts.js";
 
 const user = load();
@@ -48,44 +48,74 @@ if (modalRoot) mountModal(modalRoot);
         `).join("");
     }
 
-    function renderSingle(post) {
-        root.innerHTML = `
+function renderSingle(post) {
+    root.innerHTML = `
         ${postCard(post, { currentUserName: user?.name || "", likedSet })}
         <section class="comments-section" data-comments>
-        <h3 class="h4">Comments</h3>
-        <div data-list>
-            ${renderCommentsList(post)}
-        </div>
-        <form class="comment-form" data-post="${post.id}">
-            <input type="text" name="comment" placeholder="Write a comment..." aria-label="Write a comment">
-            <button class="btn btn--sm" type="submit">Post</button>
-        </form>
+            <h3 class="h4">Comments</h3>
+            <div data-list>
+                ${renderCommentsList(post)}
+            </div>
+            <form class="comment-form" data-post="${post.id}">
+                <input 
+                    type="text" 
+                    name="comment" 
+                    placeholder="Write a comment..." 
+                    aria-label="Write a comment"
+                    required
+                >
+                <button class="btn btn--sm" type="submit">Post</button>
+            </form>
         </section>
-        `;
+    `;
 
-        root.querySelector(".post .comments")?.remove();
+    root.querySelector(".post .comments")?.remove();
 
-        classifyPostImages(root);
-        attachMediaGuards(root);
+    const timeEl = root.querySelector(".post-time");
+    if (timeEl && post.created) {
+        timeEl.textContent = formatDateTime(post.created);
+        timeEl.title = timeAgo(post.created);
+    }
 
-        // likes
+    classifyPostImages(root);
+    attachMediaGuards(root);
 
-        wireLikes(root, {
-            reactToPost,
-            getPost,
-            likedSet,
-            saveLikedSet,
-            username,
-            statusEl,
-        });
+    wireLikes(root, {
+        reactToPost,
+        getPost,
+        likedSet,
+        saveLikedSet,
+        username,
+        statusEl,
+    });
 
-        wireComments(root, {
-            createComment,
-            getPost,
-            statusEl,
-            onAfter: loadSingle
+    const form = root.querySelector(".comment-form");
+    const listEl = root.querySelector("[data-list]");
+
+    if (form) {
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const input = form.querySelector('[name="comment"]');
+            const text = input.value.trim();
+            if (!text) return;
+
+            try {
+                setStatus(statusEl, "Posting comment...", 0);
+                await createComment(post.id, text);
+                input.value = "";
+
+                const fresh = await getPost(post.id);
+                const data = fresh?.data ?? fresh;
+
+                listEl.innerHTML = renderCommentsList(data);
+                setStatus(statusEl, "Comment posted", 1500);
+            } catch (err) {
+                console.error(err);
+                setStatus(statusEl, err.message || "Failed to post comment", 2000);
+            }
         });
     }
+}
 
     async function loadSingle() {
         setStatus(statusEl, "Loading post...", 0);

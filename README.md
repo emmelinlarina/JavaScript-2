@@ -20,7 +20,7 @@ This project focuses on JavaScript logic, API communication, modular code struct
 ### Links
 
 - GitHub repo: https://github.com/emmelinlarina/JavaScript-2
-- Live demo (GitHub Pages): https://MY-DEPLOYED-URL.com
+- Live demo (GitHub Pages): https://emmelinlarina.github.io/JavaScript-2/
 - GitHub Projects board: https://github.com/users/emmelinlarina/projects/12
 
 ## Admin / Test user:
@@ -115,6 +115,11 @@ At least three functions include JSDoc documentation, for example:
 - apiRequest
 -
 -
+
+## Acknowledgement & references
+
+- **SuperSimpleDev** (Youtube) https://www.youtube.com/@SuperSimpleDev & https://www.youtube.com/watch?v=EerdGm-ehJQ&list=LL&index=38
+- **Programming with Mosh** (Youtube) https://www.youtube.com/@programmingwithmosh & https://www.youtube.com/watch?v=eIrMbAQSU34
 
 ## Author
 

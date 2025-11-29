@@ -1,7 +1,17 @@
 import { load } from "../utils/storage.js";
 const BASE = "https://v2.api.noroff.dev";
 
-// Remember JSDoc for later
+/**
+ * Makes an API request to the specified path with the given options.
+ * 
+ * @param {string} path - The API endpoint path.
+ * @param {object} options - The options for the request.
+ * @param {string} [options.method="GET"] - The HTTP method.
+ * @param {object|null} [options.body=null] - The request body.
+ * @param {boolean} [options.auth=false] - Whether to include authentication headers.
+ * @returns {Promise<object>} The response data.
+ * @throws {Error} If the request fails or the response is not ok.
+ */
 
 export async function apiRequest( path, { method = "GET", body = null, auth = false } = {}) {
 

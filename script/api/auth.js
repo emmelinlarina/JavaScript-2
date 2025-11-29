@@ -1,6 +1,10 @@
 import { apiRequest } from "./api-fetch.js";
 
-//JS Doc for later
+/**
+ * Register a new user.
+ * @param {object} user - The user registration data.
+ * @returns {Promise<object>} The registered user data.
+ */
 
 export function register(user) {
     return apiRequest("/auth/register", {
@@ -9,7 +13,11 @@ export function register(user) {
     });
 }
 
-//js Doc for later
+/**
+ * Log in a user.
+ * @param {object} credentials - The user login credentials.
+ * @returns {Promise<object>} The logged-in user data.
+ */
 
 export function login(credentials) {
     return apiRequest("/auth/login", {
@@ -18,6 +26,10 @@ export function login(credentials) {
     });
 }
 
+/**
+ * Create a new API key.
+ * @returns {Promise<object>} The created API key data.
+ */
 export function createApiKey() {
     return apiRequest("/auth/create-api-key", {
         method: "POST",
