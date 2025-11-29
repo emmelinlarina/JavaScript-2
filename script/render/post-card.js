@@ -1,4 +1,4 @@
-import { escapeHtml, timeAgo } from "../utils/format.js";
+import { escapeHtml, timeAgo, formatDateTime } from "../utils/format.js";
 import * as media from "../utils/media.js";
 import { getStarCount } from "../utils/interactions.js";
 
@@ -12,13 +12,15 @@ export function postCard(p, { currentUserName, likedSet }) {
     const mediaUrl = media.normalizeMediaUrl(p?.media?.url || "");
     const mediaAlt = p?.media?.alt || "";
 
-    const title = escapeHtml(p?.title || "");
     const body = escapeHtml(p?.body || "");
     
     const likeCount = getStarCount(p);
     const isLiked = likedSet.has(String(p.id));
     const postUrl = `single-post.html?id=${encodeURIComponent(p.id)}`;
     const tags = Array.isArray(p?.tags) ? p.tags : [];
+
+    const fullDate = formatDateTime(p.created);
+    const relative = timeAgo(p.created);
     
     return `
 
@@ -49,8 +51,6 @@ export function postCard(p, { currentUserName, likedSet }) {
                 <img src="${mediaUrl}" alt="${escapeHtml(mediaAlt || "")}" loading="lazy" decoding="async">
                 </div>
             </figure>` : ""}
-
-        <time class="post-time" datetime="${p.created}">${timeAgo(p.created)}</time>
         
         ${p.title ? `<h2 class="post-title"><a class="post-link" href="${postUrl}" data-post-link>${escapeHtml(p.title)}</a></h2>` : ""}
         ${body ? `<p class="post-body">${body}</p>` : ""}

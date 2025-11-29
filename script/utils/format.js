@@ -10,6 +10,21 @@ export function timeAgo(iso) {
     return `${d2}d`;
 };
 
+export function formatDateTime(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return "";
+
+    return d.toLocaleString("en-GB", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+}
+
 export const debounce = (fn, ms=250) => {
     let timeout; return (...args) => {
         clearTimeout(timeout);

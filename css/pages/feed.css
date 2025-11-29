@@ -21,7 +21,7 @@ header {
 
 .create-post {
     display: flex; flex-direction: column; gap: 8px;
-    padding: 12px; max-width: auto;
+    padding: 12px; max-width: auto; 
 }
 
 .create-post .btn { padding: 10px; }
@@ -56,6 +56,10 @@ header {
 .post {  
     background-color: #fff;
     padding: 12px;
+}
+
+.post-meta {
+    padding: 10px 0 10px 15px;
 }
 
 .post-header {
@@ -120,13 +124,20 @@ header {
     margin: 8px 0;
 }
 
-
 /* owner tools */
 
 .owner-tools { display: flex; gap: 4px; align-items: center; }
 .link-btn { padding: .2rem; border: 0; background-color: transparent; cursor: pointer; text-decoration: underline; font: inherit;}
 
 /* comments and likes */
+
+.comments-section { 
+    display: grid; 
+    border-top: 1px solid #d1d5db;
+    text-align: left;
+    padding: 20px;  
+    gap: 12px;
+}
 
 .icon-btn { font-size: 1.2rem; border: 0; background: transparent; padding: 6px 5px; border-radius: 10px; cursor: pointer;}
 .meta { font-size: 0.85rem; }

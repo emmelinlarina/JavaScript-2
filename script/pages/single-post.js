@@ -4,7 +4,7 @@ import { classifyPostImages, attachMediaGuards } from "../utils/media.js";
 import { mount as mountModal, close as closeModal} from "../utils/modal.js";
 import { postCard } from "../render/post-card.js";
 import { wireLikes, wireComments } from "../utils/interactions.js";
-import { escapeHtml, timeAgo } from "../utils/format.js";
+import { escapeHtml, timeAgo, formatDateTime } from "../utils/format.js";
 import { getPost, reactToPost, createComment, updatePost, deletePost } from "../api/posts.js";
 
 const user = load();
@@ -48,44 +48,49 @@ if (modalRoot) mountModal(modalRoot);
         `).join("");
     }
 
-    function renderSingle(post) {
-        root.innerHTML = `
+function renderSingle(post) {
+    const createdFull = formatDateTime(post.created);
+
+    root.innerHTML = `
         ${postCard(post, { currentUserName: user?.name || "", likedSet })}
+
+        <p class="post-meta">
+            Posted ${escapeHtml(createdFull || "")}
+        </p>
+
         <section class="comments-section" data-comments>
-        <h3 class="h4">Comments</h3>
-        <div data-list>
-            ${renderCommentsList(post)}
-        </div>
-        <form class="comment-form" data-post="${post.id}">
-            <input type="text" name="comment" placeholder="Write a comment..." aria-label="Write a comment">
-            <button class="btn btn--sm" type="submit">Post</button>
-        </form>
+            <h3 class="h4">Comments</h3>
+            <div data-list>
+                ${renderCommentsList(post)}
+            </div>
+            <form class="comment-form" data-post="${post.id}">
+                <input type="text" name="comment" placeholder="Write a comment..." aria-label="Write a comment">
+                <button class="btn btn--sm" type="submit">Post</button>
+            </form>
         </section>
-        `;
+    `;
 
-        root.querySelector(".post .comments")?.remove();
+    root.querySelector(".post .comments")?.remove();
 
-        classifyPostImages(root);
-        attachMediaGuards(root);
+    classifyPostImages(root);
+    attachMediaGuards(root);
 
-        // likes
+    wireLikes(root, {
+        reactToPost,
+        getPost,
+        likedSet,
+        saveLikedSet,
+        username,
+        statusEl,
+    });
 
-        wireLikes(root, {
-            reactToPost,
-            getPost,
-            likedSet,
-            saveLikedSet,
-            username,
-            statusEl,
-        });
-
-        wireComments(root, {
-            createComment,
-            getPost,
-            statusEl,
-            onAfter: loadSingle
-        });
-    }
+    wireComments(root, {
+        createComment,
+        getPost,
+        statusEl,
+        onAfter: loadSingle,
+    });
+}
 
     async function loadSingle() {
         setStatus(statusEl, "Loading post...", 0);
