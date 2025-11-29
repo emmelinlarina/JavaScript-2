@@ -116,6 +116,11 @@ At least three functions include JSDoc documentation, for example:
 -
 -
 
+## Acknowledgement & references
+
+- **SuperSimpleDev** (Youtube) https://www.youtube.com/@SuperSimpleDev & https://www.youtube.com/watch?v=EerdGm-ehJQ&list=LL&index=38
+- **Programming with Mosh** (Youtube) https://www.youtube.com/@programmingwithmosh & https://www.youtube.com/watch?v=eIrMbAQSU34
+
 ## Author
 
 > Emmelin Larina Tvedt Nilsen, Frontend Development Student
