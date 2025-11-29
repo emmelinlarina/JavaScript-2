@@ -20,7 +20,7 @@ This project focuses on JavaScript logic, API communication, modular code struct
 ### Links
 
 - GitHub repo: https://github.com/emmelinlarina/JavaScript-2
-- Live demo (GitHub Pages): https://MY-DEPLOYED-URL.com
+- Live demo (GitHub Pages): https://emmelinlarina.github.io/JavaScript-2/
 - GitHub Projects board: https://github.com/users/emmelinlarina/projects/12
 
 ## Admin / Test user:

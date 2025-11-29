@@ -1,5 +1,5 @@
 .container {
-    max-width: 720px;;
+    max-width:900px;
     padding-inline: 12px;
     margin: 0 auto;
 }
@@ -32,7 +32,24 @@ header {
     .create-post .input { grid-column: 1/2; }
 }
 
+.feed-list {
+    display: grid; 
+    gap: 12px;
+    grid-template-columns: 1fr;
+}
 
+@media (max-width: 767px) {
+    .feed-list {
+        grid-template-columns: repeat(1, minmax(0,1fr));
+    }
+
+}
+
+@media (min-width: 768px) {
+    .feed-list {
+        grid-template-columns: repeat(3, minmax(0,1fr));
+    }
+}
 
 /* FEED */
 
@@ -163,7 +180,7 @@ body.no-scroll { overflow: hidden; }
 
 .modal-search {
     display: grid;
-    gap: 12px;
+    gap: 15px;
     margin: 0 20px;
 }
 

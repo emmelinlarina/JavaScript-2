@@ -66,9 +66,19 @@
     display: flex;
     justify-content: center;
     text-align: center;
+    align-items: center;
     gap: 24px;
     margin: 12px 0 20px;
-    margin: 0 auto;
+    width: 100%;
+}
+
+.profile-stats-counts {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
 }
 
 .profile-stats > div {
@@ -82,12 +92,26 @@
 }
 
 #followBtn {
-    margin-left: auto;
+    margin: 0;
+    align-self: center;
 }
 
 .profile-posts {
     margin-top: 12px;
 }
+
+.feed-list {
+    display: grid; 
+    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 1024px) {
+    .feed-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
 
 /* Edit profile */
 
