@@ -51,6 +51,12 @@ if (modalRoot) mountModal(modalRoot);
 function renderSingle(post) {
     root.innerHTML = `
         ${postCard(post, { currentUserName: user?.name || "", likedSet })}
+
+        <!-- Full timestamp just for single-post view -->
+        <p class="post-meta">
+            Posted ${formatDateTime(post.created)}
+        </p>
+
         <section class="comments-section" data-comments>
             <h3 class="h4">Comments</h3>
             <div data-list>
@@ -70,12 +76,6 @@ function renderSingle(post) {
     `;
 
     root.querySelector(".post .comments")?.remove();
-
-    const timeEl = root.querySelector(".post-time");
-    if (timeEl && post.created) {
-        timeEl.textContent = formatDateTime(post.created);
-        timeEl.title = timeAgo(post.created);
-    }
 
     classifyPostImages(root);
     attachMediaGuards(root);
