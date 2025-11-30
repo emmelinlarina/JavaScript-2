@@ -1,6 +1,6 @@
-# **JavaScript-2-Assignment**
+# JavaScript-2-Assignment
 
-# Social Media App — Frontend Development
+## Social Media App — Frontend Development
 
 This project simulates a minimal, functional social media environment where users can register, log in, create posts, follow others, react, and interact through comments. It is designed to demonstrate my ability to structure, plan, and develop a complete front-end application powered by the Noroff Social API.
 
@@ -107,14 +107,6 @@ This project focuses on JavaScript logic, API communication, modular code struct
 - Noroff API
 - LocalStorage for persistent like data (could not make the likes work)
 - GitHub Pages for deployment
-
-## JSDoc
-
-At least three functions include JSDoc documentation, for example:
-
-- apiRequest
--
--
 
 ## Acknowledgement & references
 
