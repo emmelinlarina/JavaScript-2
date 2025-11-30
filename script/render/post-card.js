@@ -51,9 +51,13 @@ export function postCard(p, { currentUserName, likedSet }) {
                 <img src="${mediaUrl}" alt="${escapeHtml(mediaAlt || "")}" loading="lazy" decoding="async">
                 </div>
             </figure>` : ""}
+
+        <time class="post-time" title="${fullDate}">${relative}</time>
         
         ${p.title ? `<h2 class="post-title"><a class="post-link" href="${postUrl}" data-post-link>${escapeHtml(p.title)}</a></h2>` : ""}
         ${body ? `<p class="post-body">${body}</p>` : ""}
+
+        
 
         ${tags.length ? ` 
             <ul class="post-tags">
