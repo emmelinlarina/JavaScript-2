@@ -9,12 +9,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Home Feed Page">
 
+    <!-- ignore 
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/navigation.css">
     <link rel="stylesheet" href="css/pages/feed.css">
+    -->
 
     <script src="https://kit.fontawesome.com/e0e8f3b90b.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+
 
 </head>
 
@@ -25,7 +30,7 @@
 
     </header>
 
-    <main class="container feed">
+    <main class="container feed mx-auto">
         <h1 class="feed-title">Updates for you, <span data-greeting></span></h1>
 
         <div class="feed-tabs">
@@ -34,15 +39,17 @@
             <button class="chip" id="discoverBtn" data-filter="Discover">Discover+</button>
         </div>
 
-        <form id="createPost" class="create-post">
+        <!--  <form id="createPost" class="create-post">
             <input class="input" name="title" type="text" maxlength="80" placeholder="Title" aria-label="Post title"
                 required />
             <textarea class="input" name="body" placeholder="Say something..." aria-label="Post body"></textarea>
             <button class="btn" type="submit">Post</button>
         </form>
+        -->
 
         <p class="status" data-status></p>
-        <section class="feed-list" data-feed></section>
+        <section class="feed-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-28" data-feed>
+        </section>
     </main>
 
     <footer></footer>

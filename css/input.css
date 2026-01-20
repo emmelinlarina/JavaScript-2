@@ -1,1 +1,31 @@
 @import "tailwindcss";
+
+@layer components {
+    .btn {
+        @apply rounded-xl px-4 py-3 font-semibold bg-blue-500 text-white hover:bg-blue-600 transition;
+    }
+
+    .chip {
+        @apply rounded-full border border-zinc-800 bg-zinc-200 px-4 py-2 text-sm text-black hover:bg-zinc-800 transition m-2;
+    }
+
+    .chip.is-active {
+        @apply bg-zinc-800 text-white border-zinc-800;
+    }
+
+    .input {
+        @apply w-full rounded-xl border border-zinc-800 bg-white/20 px-4 py-3 text-zinc-100 placeholder:text-zinc-500;
+    }
+
+    .post {
+        @apply rounded-2xl border border-zinc-500 bg-white overflow-hidden p-4 mb-4;
+    }
+
+    .icon-btn {
+        @apply h-10 w-10 rounded-xl border border-zinc-800 bg-zinc-200 hover:bg-zinc-400 transition;
+    }
+
+    .icon-btn.liked {
+        @apply border-gold-500/40;
+    }
+}

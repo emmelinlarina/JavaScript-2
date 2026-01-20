@@ -13,7 +13,7 @@ export function postCard(p, { currentUserName, likedSet }) {
     const mediaAlt = p?.media?.alt || "";
 
     const body = escapeHtml(p?.body || "");
-    
+
     const likeCount = getStarCount(p);
     const isLiked = likedSet.has(String(p.id));
     const postUrl = `single-post.html?id=${encodeURIComponent(p.id)}`;
@@ -21,10 +21,10 @@ export function postCard(p, { currentUserName, likedSet }) {
 
     const fullDate = formatDateTime(p.created);
     const relative = timeAgo(p.created);
-    
+
     return `
 
-    <article class="post" data-post="${p.id}">
+    <article class="post " data-post="${p.id}">
 
         <header class="post-header">
             <div class="post-user">
@@ -52,10 +52,10 @@ export function postCard(p, { currentUserName, likedSet }) {
                 </div>
             </figure>` : ""}
 
-        <time class="post-time" title="${fullDate}">${relative}</time>
+        <time class="post-time px-4 pt-3 text-xs text-zinc-500" title="${fullDate}">${relative}</time>
         
-        ${p.title ? `<h2 class="post-title"><a class="post-link" href="${postUrl}" data-post-link>${escapeHtml(p.title)}</a></h2>` : ""}
-        ${body ? `<p class="post-body">${body}</p>` : ""}
+        ${p.title ? `<h2 class="post-title "><a class="post-link" href="${postUrl}" data-post-link>${escapeHtml(p.title)}</a></h2>` : ""}
+        ${body ? `<p class="post-body px-4 pt-2 text-sm text-zinc-200 leading-relaxed">${body}</p>` : ""}
 
         
 

@@ -6,7 +6,7 @@
     "tailwindcss": "^4.1.18"
   },
   "scripts": {
-    "dev": "tailwindcss -i ./css/input.css -o ./css/style.css --watch",
-    "build": "tailwindcss -i ./css/input.css -o ./css/style.css --minify"
+    "dev": "npx @tailwindcss/cli -i ./css/input.css -o ./css/style.css --watch",
+    "build": "npx @tailwindcss/cli -i ./css/input.css -o ./css/style.css --minify"
   }
 }
