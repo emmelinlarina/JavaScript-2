@@ -5,27 +5,19 @@
         @apply rounded-xl px-4 py-3 font-semibold bg-blue-500 text-white hover:bg-blue-600 transition;
     }
 
+    .btn--sm {
+        @apply px-3 py-2 text-sm;
+    }
+
     .chip {
-        @apply rounded-full border border-zinc-800 bg-zinc-200 px-4 py-2 text-sm text-black hover:bg-zinc-800 transition m-2;
+        @apply rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm text-zinc-900 hover:bg-zinc-100 transition m-2;
     }
 
     .chip.is-active {
-        @apply bg-zinc-800 text-white border-zinc-800;
+        @apply bg-zinc-900 text-white border-zinc-900;
     }
 
     .input {
-        @apply w-full rounded-xl border border-zinc-800 bg-white/20 px-4 py-3 text-zinc-100 placeholder:text-zinc-500;
-    }
-
-    .post {
-        @apply rounded-2xl border border-zinc-500 bg-white overflow-hidden p-4 mb-4;
-    }
-
-    .icon-btn {
-        @apply h-10 w-10 rounded-xl border border-zinc-800 bg-zinc-200 hover:bg-zinc-400 transition;
-    }
-
-    .icon-btn.liked {
-        @apply border-gold-500/40;
+        @apply w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder:text-zinc-400;
     }
 }

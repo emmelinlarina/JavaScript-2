@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="css/pages/feed.css">
     -->
 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+
     <script src="https://kit.fontawesome.com/e0e8f3b90b.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="css/style.css">
@@ -23,15 +26,15 @@
 
 </head>
 
-<body>
+<body class="bg-zinc-50 text-zinc-900 font-[Inter]">
 
 
     <header>
 
     </header>
 
-    <main class="container feed mx-auto">
-        <h1 class="feed-title">Updates for you, <span data-greeting></span></h1>
+    <main class=" container feed mx-auto w-full max-w-6xl px-4">
+        <h1 class="feed-title mx-auto text-xl font-bold">Updates for you, <span data-greeting></span></h1>
 
         <div class="feed-tabs">
             <button class="chip is-active" data-filter="Recent">Recent</button>
@@ -48,7 +51,7 @@
         -->
 
         <p class="status" data-status></p>
-        <section class="feed-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-28" data-feed>
+        <section class="feed-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch pb-28" data-feed>
         </section>
     </main>
 
