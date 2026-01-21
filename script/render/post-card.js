@@ -78,7 +78,7 @@ export function postCard(p, { currentUserName, likedSet }) {
 
     <footer class="mt-auto px-5 py-3 border-t border-zinc-200 flex items-center gap-3 bg-white">
 
-    <button class="h-10 w-10 rounded-xl bg-white hover:bg-zinc-50 transition text-zinc-700 transition ${isLiked ? "text-yellow-600 border-yellow-200 bg-yellow-50" : "text-zinc-700"}" data-like="${p.id}" aria-label="Like">
+    <button class="h-10 w-10 rounded-xl bg-white hover:bg-zinc-50 text-zinc-700 transition ${isLiked ? "text-yellow-600 border-yellow-200 bg-yellow-50" : "text-zinc-700"}" data-like="${p.id}" aria-label="Like">
       <i class="${isLiked ? "fa-solid" : "fa-regular"} fa-star"></i>
     </button>
     <span class="text-sm font-medium text-zinc-700 min-w-6" data-like-count>${likeCount}</span>
