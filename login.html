@@ -23,40 +23,45 @@
 
 </head>
 
-<body class="auth-page">
+<body class="flex min-h-screen items-center justify-center bg-gradient-to-br from-zinc-50 to-zinc-100 p-4">
+
+    <main class="account w-full max-w-md">
+        <a href="auth.html"
+            class="mb-6 inline-flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition"
+            aria-label="Back">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back</span>
+        </a>
+
+        <section class="account-panel ">
+            <h1 class="account-title mb-4 text-3xl font-bold text-zinc-900">We've missed you!</h1>
 
 
-    <header></header>
-
-    <main class="account">
-        <a href="auth.html" class="account-back" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></a>
-
-        <section class="account-panel">
-            <h1 class="account-title">We've missed you!</h1>
-
-            <form id="loginForm" class="account-form" novalidate>
-                <label class="field">
-                    <span class="field-label"></span>
-                    <input class="field-input" name="email" type="email" placeholder="email" required>
+            <form id="loginForm" class="space-y-4 rounded-2xl border border-zinc-200 p-10" novalidate>
+                <label class="field block">
+                    <span class="field-label mb-1 block text-lg font-semibold text-zinc-700">Email</span>
+                    <input class="field-input w-full rounded-xl border border-zinc-300 px-4 py-3" name="email"
+                        type="email" placeholder="your@email.com" required>
                 </label>
 
-                <label class="field">
-                    <span class="field-label"></span>
-                    <input class="field-input" name="password" type="password" placeholder="password" required>
+                <label class="field block">
+                    <span class="field-label mb-1 block text-lg font-semibold text-zinc-700">Password</span>
+                    <input class="field-input w-full rounded-xl border border-zinc-300 px-4 py-3" name="password"
+                        type="password" placeholder="••••••••" required>
                 </label>
-                <button class="btn account-cta" type="submit">Log in</button>
+
+                <button class="btn account-cta w-full" type="submit">Log in</button>
             </form>
 
-            <p class="account-switch">
+            <p class="account-switch mt-6 text-center text-sm text-zinc-600">
                 Don't have an account?
-                <a href="register.html">Register here</a>
+                <a href="register.html" class="font-semibold text-blue-500 hover:text-blue-600 transition">Register
+                    here</a>
             </p>
 
-            <div id="status" class="account-status" role="status" aria-live="polite"></div>
+            <div id="status" class="account-statusmt-4 text-center text-sm" role="status" aria-live="polite"></div>
         </section>
     </main>
-
-    <footer></footer>
 
 
 

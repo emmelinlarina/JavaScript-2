@@ -37,13 +37,16 @@ const likedSet = getLikedSet(username) || new Set();
 function renderCommentsList(post) {
     const comments = Array.isArray(post?.comments) ? post.comments : [];
     if (!comments.length) {
-        return `<p class="muted">No comments yet</p>`;
+        return `<p class="text-center py-8 text-sm text-zinc-500 italic">No comments yet. Be the first to comment!</p>`;
     }
     return comments.map(c => `
-        <div class="modal-comment">
-            <strong>${escapeHtml(c.author?.name || "Unknown")}</strong>
-                <span>${timeAgo(c.created)}</span>
-            <p>${escapeHtml(c.body || "")}</p>
+        <div class="py-4 border-b border-zinc-100 last:border-0">
+            <div class="flex items-center gap-2 mb-2">
+                <strong class="text-sm font-semibold text-zinc-900">${escapeHtml(c.author?.name || "Unknown")}</strong>
+                <span class="text-xs text-zinc-400">•</span>
+                <span class="text-xs text-zinc-500">${timeAgo(c.created)}</span>
+            </div>
+            <p class="text-sm text-zinc-700 leading-relaxed">${escapeHtml(c.body || "")}</p>
         </div>
         `).join("");
 }
@@ -57,21 +60,26 @@ function renderSingle(post) {
             Posted ${formatDateTime(post.created)}
         </p>
 
-        <section class="comments-section px-5 text-xl " data-comments>
-            <h3 class="h4 mb-2">Comments</h3>
-            <div data-list>
+        <section class="mt-6 rounded-2xl border border-zinc-200 bg-white shadow-sm" data-comments>
+            <div class="border-b border-zinc-200 px-6 py-4">
+                <h3 class="text-lg font-bold text-zinc-900">Comments</h3>
+            </div>
+            <div class="px-6" data-list>
                 ${renderCommentsList(post)}
             </div>
-            <form class="comment-form" data-post="${post.id}">
-                <input 
-                    type="text" 
-                    name="comment" 
-                    placeholder="Write a comment..." 
-                    aria-label="Write a comment"
-                    required
-                >
-                <button class="btn btn--sm" type="submit">Post</button>
-            </form>
+            <div class="border-t border-zinc-200 bg-zinc-50 px-6 py-4">
+                <form class="flex gap-3" data-post="${post.id}">
+                    <input 
+                        class="input flex-1"
+                        type="text" 
+                        name="comment" 
+                        placeholder="Write a comment..." 
+                        aria-label="Write a comment"
+                        required
+                    >
+                    <button class="btn btn--sm" type="submit">Post</button>
+                </form>
+            </div>
         </section>
     `;
 
