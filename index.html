@@ -34,12 +34,13 @@
     </header>
 
     <main class=" container feed mx-auto w-full max-w-6xl px-4">
-        <h1 class="feed-title mx-auto text-xl font-bold">Updates for you, <span data-greeting></span></h1>
+        <h1 class="feed-title flex justify-center mt-10 mx-auto text-2xl font-bold">Updates for you, <span
+                data-greeting></span></h1>
 
-        <div class="feed-tabs">
-            <button class="chip is-active" data-filter="Recent">Recent</button>
-            <button class="chip" data-filter="Friends">Friends</button>
-            <button class="chip" id="discoverBtn" data-filter="Discover">Discover+</button>
+        <div class="feed-tabs flex justify-center mt-6 mb-4 text-xl">
+            <button class="chip is-active text-lg" data-filter="Recent">Recent</button>
+            <button class="chip text-lg" data-filter="Friends">Friends</button>
+            <button class="chip text-lg" id="discoverBtn" data-filter="Discover">Discover+</button>
         </div>
 
         <!--  <form id="createPost" class="create-post">

@@ -4,25 +4,25 @@ import { getStarCount } from "../utils/interactions.js";
 
 export function postCard(p, { currentUserName, likedSet }) {
 
-    const author = p?.author?.name || "Unknown";
-    const profileUrl = `profile.html?name=${encodeURIComponent(author)}`;
-    const avatarUrl = p?.author?.avatar?.url || "";
-    const isOwner = currentUserName && p?.author?.name && currentUserName === p.author.name;
+  const author = p?.author?.name || "Unknown";
+  const profileUrl = `profile.html?name=${encodeURIComponent(author)}`;
+  const avatarUrl = p?.author?.avatar?.url || "";
+  const isOwner = currentUserName && p?.author?.name && currentUserName === p.author.name;
 
-    const mediaUrl = media.normalizeMediaUrl(p?.media?.url || "");
-    const mediaAlt = p?.media?.alt || "";
+  const mediaUrl = media.normalizeMediaUrl(p?.media?.url || p?.image?.url || p?.imageUrl || "");
+  const mediaAlt = p?.media?.alt || "";
 
-    const body = escapeHtml(p?.body || "");
+  const body = escapeHtml(p?.body || "");
 
-    const likeCount = getStarCount(p);
-    const isLiked = likedSet.has(String(p.id));
-    const postUrl = `single-post.html?id=${encodeURIComponent(p.id)}`;
-    const tags = Array.isArray(p?.tags) ? p.tags : [];
+  const likeCount = getStarCount(p);
+  const isLiked = likedSet.has(String(p.id));
+  const postUrl = `single-post.html?id=${encodeURIComponent(p.id)}`;
+  const tags = Array.isArray(p?.tags) ? p.tags : [];
 
-    const fullDate = formatDateTime(p.created);
-    const relative = timeAgo(p.created);
+  const fullDate = formatDateTime(p.created);
+  const relative = timeAgo(p.created);
 
-    return `
+  return `
 <article class="post h-full flex flex-col rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition"
   data-post="${p.id}"
 >
@@ -51,28 +51,36 @@ export function postCard(p, { currentUserName, likedSet }) {
   </header>
 
   ${mediaUrl ? `
-    <figure class="px-5">
-      <div class="w-full overflow-hidden rounded-2xl bg-zinc-100 border border-zinc-200 h-40">
+    <figure class="px-5 post-media">
+      <div
+        class="w-full overflow-hidden rounded-2xl bg-zinc-100 border border-zinc-200 aspect-square flex items-center justify-center relative"
+        style="aspect-ratio: 1 / 1"
+      >
+        <div class="absolute inset-0 bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 animate-pulse"></div>
         <img
-          class="h-full w-full object-cover"
+          class="h-full w-full object-cover relative z-10 opacity-0 transition-opacity duration-300"
           src="${mediaUrl}"
           alt="${escapeHtml(mediaAlt || "")}"   
           loading="lazy"
           decoding="async"
+          width="1200"  
+          height="1200"
+          onload="this.classList.remove('opacity-0')"
+          onerror="this.closest('figure').remove()"
         >
       </div>
     </figure>
   ` : ""}
 
-  <time class="px-5 pt-3 text-xs text-zinc-500" title="${fullDate}">${relative}</time>
+  <time class="px-5 ${mediaUrl ? 'pt-3' : 'pt-4'} text-xs text-zinc-500" title="${fullDate}">${relative}</time>
 
   ${p.title ? `
-    <h2 class="px-5 pt-2 text-lg font-bold text-zinc-900">
+    <h2 class="px-5 ${mediaUrl ? 'pt-2' : 'pt-3'} text-lg font-bold text-zinc-900">
       <a class="hover:underline" href="${postUrl}" data-post-link>${escapeHtml(p.title)}</a>
     </h2>
   ` : ""}
 
-  ${body ? ` <p class="px-5 pt-2 text-sm text-zinc-700 leading-relaxed">  ${body} </p> ` : ""}
+  ${body ? ` <p class="mb-3 px-5 ${mediaUrl ? 'pt-2' : 'pt-1'} text-sm text-zinc-700 leading-relaxed">  ${body} </p> ` : ""}
 
   
 
@@ -81,11 +89,13 @@ export function postCard(p, { currentUserName, likedSet }) {
     <button class="h-10 w-10 rounded-xl bg-white hover:bg-zinc-50 text-zinc-700 transition ${isLiked ? "text-yellow-600 border-yellow-200 bg-yellow-50" : "text-zinc-700"}" data-like="${p.id}" aria-label="Like">
       <i class="${isLiked ? "fa-solid" : "fa-regular"} fa-star"></i>
     </button>
+
     <span class="text-sm font-medium text-zinc-700 min-w-6" data-like-count>${likeCount}</span>
 
     <button class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white hover:bg-zinc-50 transition text-zinc-700" data-comment="${p.id}" aria-label="Comment">
       <i class="fa-regular fa-comment"></i>
     </button>
+
     <span class="text-sm font-medium text-zinc-700 min-w-6">${Array.isArray(p?.comments) ? p.comments.length : 0}</span>
   </footer>
 
