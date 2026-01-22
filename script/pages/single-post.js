@@ -1,7 +1,7 @@
 import { load, getLikedSet, saveLikedSet, logout } from "../utils/storage.js";
-import { setStatus, renderSkeletons } from "../utils/ui.js";    
+import { setStatus, renderSkeletons } from "../utils/ui.js";
 import { classifyPostImages, attachMediaGuards } from "../utils/media.js";
-import { mount as mountModal, close as closeModal} from "../utils/modal.js";
+import { mount as mountModal, close as closeModal } from "../utils/modal.js";
 import { postCard } from "../render/post-card.js";
 import { wireLikes } from "../utils/interactions.js";
 import { escapeHtml, timeAgo, formatDateTime } from "../utils/format.js";
@@ -21,44 +21,44 @@ if (logoutBtn) logoutBtn.addEventListener("click", logout);
 if (titleEl) titleEl.textContent = user?.name || "Friend";
 if (modalRoot) mountModal(modalRoot);
 
-    const params = new URLSearchParams(location.search);
-    const postId = params.get("id");
-    if (!postId) {
-        statusEl.textContent = "Missing post ID.", 2000;
-        throw new Error("single-post: Missing post ID");
+const params = new URLSearchParams(location.search);
+const postId = params.get("id");
+if (!postId) {
+    statusEl.textContent = "Missing post ID.", 2000;
+    throw new Error("single-post: Missing post ID");
+}
+
+// likes
+const username = user?.email || user?.id || user?.name || "anon";
+const likedSet = getLikedSet(username) || new Set();
+
+//render
+
+function renderCommentsList(post) {
+    const comments = Array.isArray(post?.comments) ? post.comments : [];
+    if (!comments.length) {
+        return `<p class="muted">No comments yet</p>`;
     }
-
-    // likes
-    const username = user?.email || user?.id || user?.name || "anon";
-    const likedSet = getLikedSet(username) || new Set();
-
-    //render
-
-    function renderCommentsList(post) {
-        const comments = Array.isArray(post?.comments) ? post.comments : [];
-        if (!comments.length) {
-            return `<p class="muted">No comments yet</p>`;
-        }
-        return comments.map(c => `
+    return comments.map(c => `
         <div class="modal-comment">
             <strong>${escapeHtml(c.author?.name || "Unknown")}</strong>
                 <span>${timeAgo(c.created)}</span>
             <p>${escapeHtml(c.body || "")}</p>
         </div>
         `).join("");
-    }
+}
 
 function renderSingle(post) {
     root.innerHTML = `
-        ${postCard(post, { currentUserName: user?.name || "", likedSet })}
+        ${postCard(post, { currentUserName: user?.name || "", likedSet, isSingleView: true })}
 
-        <!-- Full timestamp just for single-post view -->
-        <p class="post-meta">
+        
+        <p class="post-meta mx-auto text-right text-sm text-zinc-500 mt-2 mb-6 mr-2">
             Posted ${formatDateTime(post.created)}
         </p>
 
-        <section class="comments-section" data-comments>
-            <h3 class="h4">Comments</h3>
+        <section class="comments-section px-5 text-xl " data-comments>
+            <h3 class="h4 mb-2">Comments</h3>
             <div data-list>
                 ${renderCommentsList(post)}
             </div>
@@ -117,43 +117,43 @@ function renderSingle(post) {
     }
 }
 
-    async function loadSingle() {
-        setStatus(statusEl, "Loading post...", 0);
-        renderSkeletons(root, 1);
-        try {
-            const res = await getPost(postId);
-            const post = res?.data ?? res;
-            renderSingle(post);
-            setStatus(statusEl, "", 0);
-        } catch (err) {
-            console.error(err);
-            root.innerHTML = `<p class="error">Failed to load post: ${err.message || err}</p>`;
-            setStatus(statusEl, "Failed to load post.", 2000);
-        }   
-
+async function loadSingle() {
+    setStatus(statusEl, "Loading post...", 0);
+    renderSkeletons(root, 1);
+    try {
+        const res = await getPost(postId);
+        const post = res?.data ?? res;
+        renderSingle(post);
+        setStatus(statusEl, "", 0);
+    } catch (err) {
+        console.error(err);
+        root.innerHTML = `<p class="error">Failed to load post: ${err.message || err}</p>`;
+        setStatus(statusEl, "Failed to load post.", 2000);
     }
 
-    // edit / delete
+}
 
-    root.addEventListener("click", async (e) => {
-        const del = e.target.closest("[data-delete]");
-        if (del) {
-            if (!confirm("Delete post?")) return;
+// edit / delete
 
-            try {
-                await deletePost(postId);
-                setStatus(statusEl, "Post deleted.", 2000);
-                history.back();
-            } catch (err) {
-                console.error(err);
-                setStatus(statusEl, "Failed to delete post.", 2000);
-            }
-            return;
+root.addEventListener("click", async (e) => {
+    const del = e.target.closest("[data-delete]");
+    if (del) {
+        if (!confirm("Delete post?")) return;
+
+        try {
+            await deletePost(postId);
+            setStatus(statusEl, "Post deleted.", 2000);
+            history.back();
+        } catch (err) {
+            console.error(err);
+            setStatus(statusEl, "Failed to delete post.", 2000);
         }
+        return;
+    }
 
-        const edit = e.target.closest("[data-edit]");
-        if (edit) {
-            try {
+    const edit = e.target.closest("[data-edit]");
+    if (edit) {
+        try {
             const res = await getPost(postId);
             const post = res?.data ?? res;
 
@@ -189,7 +189,7 @@ function renderSingle(post) {
                 evt.preventDefault();
                 const title = form.title.value.trim();
                 const body = form.body.value.trim();
-                try { 
+                try {
                     await updatePost(postId, { title, body });
                     closeModal();
                     await loadSingle();
@@ -201,7 +201,7 @@ function renderSingle(post) {
             });
         } catch (err) {
             setStatus(statusEl, "Failed to open editor", 2000);
-        }   
+        }
     }
 });
 

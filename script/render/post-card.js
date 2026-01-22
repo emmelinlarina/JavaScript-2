@@ -2,7 +2,7 @@ import { escapeHtml, timeAgo, formatDateTime } from "../utils/format.js";
 import * as media from "../utils/media.js";
 import { getStarCount } from "../utils/interactions.js";
 
-export function postCard(p, { currentUserName, likedSet }) {
+export function postCard(p, { currentUserName, likedSet, isSingleView }) {
 
   const author = p?.author?.name || "Unknown";
   const profileUrl = `profile.html?name=${encodeURIComponent(author)}`;
@@ -43,7 +43,7 @@ export function postCard(p, { currentUserName, likedSet }) {
         <button class="h-10 w-10 rounded-xl border border-zinc-700 bg-white/5 text-zinc-900 hover:bg-white/10 transition" data-edit="${p.id}" aria-label="Edit post">
           <i class="fa-solid fa-pen"></i>
         </button>
-        <button class="h-10 w-10 rounded-xl border border-red-500/30 bg-red-500/5 text-red-200 hover:bg-red-500/10 transition" data-delete="${p.id}" aria-label="Delete post">
+        <button class="h-10 w-10 rounded-xl border border-black-500/30 bg-black-500/5 text-black-200 hover:bg-black-500/10 transition" data-delete="${p.id}" aria-label="Delete post">
           <i class="fa-solid fa-trash"></i>
         </button>
       </div>
@@ -53,10 +53,10 @@ export function postCard(p, { currentUserName, likedSet }) {
   ${mediaUrl ? `
     <figure class="px-5 post-media">
       <div
-        class="w-full overflow-hidden rounded-2xl bg-zinc-100 border border-zinc-200 aspect-square flex items-center justify-center relative"
+        class="overflow-hidden rounded-2xl bg-zinc-100 border border-zinc-200 aspect-square flex items-center justify-center relative ${isSingleView ? 'mx-auto max-w-2xl' : 'w-full'}"
         style="aspect-ratio: 1 / 1"
       >
-        <div class="absolute inset-0 bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 animate-pulse"></div>
+        <div class="absolute inset-0 bg-linear-to-r from-zinc-200 via-zinc-100 to-zinc-200 animate-pulse"></div>
         <img
           class="h-full w-full object-cover relative z-10 opacity-0 transition-opacity duration-300"
           src="${mediaUrl}"
