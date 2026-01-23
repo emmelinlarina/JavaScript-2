@@ -9,7 +9,7 @@
 
 @layer components {
     .btn {
-        @apply rounded-xl px-4 py-3 font-semibold bg-blue-500 text-white hover:bg-blue-600 transition;
+        @apply rounded-xl px-4 py-3 font-semibold bg-gray-900 text-white hover:bg-gray-900/20 hover:text-black transition cursor-pointer;
     }
 
     .btn--sm {
@@ -26,5 +26,9 @@
 
     .input {
         @apply w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder:text-zinc-400;
+    }
+
+    #status {
+        @apply text-sm text-red-600 font-medium mt-4;
     }
 }

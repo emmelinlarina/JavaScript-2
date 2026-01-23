@@ -9,54 +9,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Register Page">
 
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/navigation.css">
-    <link rel="stylesheet" href="css/pages/account.css">
-    <link rel="stylesheet" href="css/pages/register.css">
+    <link rel="stylesheet" href="css/style.css">
 
     <script src="https://kit.fontawesome.com/e0e8f3b90b.js" crossorigin="anonymous"></script>
 
 </head>
 
-<body class="auth-page">
+<body class="flex min-h-screen items-center justify-center bg-gradient-to-br from-zinc-50 to-zinc-100 p-4 sm:p-6">
 
 
     <header>
 
     </header>
 
-    <main class="account">
-        <a href="auth.html" class="account-back" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></a>
+    <main class="account w-full max-w-md">
+        <a href="auth.html"
+            class="mb-6 inline-flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition"
+            aria-label="Back"><i class="fa-solid fa-arrow-left"></i><span>Back</span></a>
 
-        <section class="account-panel">
-            <h1 class="account-title">Let's get started</h1>
+        <section class="account-panel ">
+            <h1 class="account-title mb-2 text-2xl sm:text-3xl font-bold text-zinc-900">Let's get started</h1>
+            <p class="mb-6 text-sm sm:text-base text-zinc-600">Create an account to join the community</p>
 
-            <form id="registerForm" class="account-form">
+            <form id="registerForm" class="space-y-4 sm:space-y-5 rounded-2xl border border-zinc-200 p-6 sm:p-10">
 
-                <label class="field">
-                    <span class="field-label"></span>
-                    <input class="field-input" name="name" type="name" placeholder="name" required>
+                <label class="field block">
+                    <span class="field-label mb-2 block text-base sm:text-lg font-semibold text-zinc-700">Name</span>
+                    <input
+                        class="field-input w-full rounded-xl border border-zinc-300 px-4 py-2 sm:py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                        name="name" type="text" placeholder="Your name" required>
                 </label>
 
-                <label class="field">
-                    <span class="field-label"></span>
-                    <input class="field-input" name="email" type="email" placeholder="email" required>
+                <label class="field block">
+                    <span class="field-label mb-2 block text-base sm:text-lg font-semibold text-zinc-700">Email</span>
+                    <input
+                        class="field-input w-full rounded-xl border border-zinc-300 px-4 py-2 sm:py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                        name="email" type="email" placeholder="your@email.com" required>
                 </label>
 
-                <label class="field">
-                    <span class="field-label"></span>
-                    <input class="field-input" name="password" type="password" placeholder="password" required>
+                <label class="field block">
+                    <span
+                        class="field-label mb-2 block text-base sm:text-lg font-semibold text-zinc-700">Password</span>
+                    <div class="relative">
+                        <input
+                            class="field-input w-full rounded-xl border border-zinc-300 px-4 py-2 sm:py-3 pr-12 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            name="password" type="password" placeholder="••••••••" required>
+                        <button type="button"
+                            class="toggle-password absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-zinc-500 hover:text-zinc-700 transition"
+                            aria-label="Toggle password visibility">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </label>
-                <button class="btn account-cta" type="submit">Create Account</button>
+                <button
+                    class="btn account-cta w-full rounded-xl text-white font-semibold py-2 sm:py-3 px-4 transition duration-200 mt-2"
+                    type="submit">Create Account</button>
             </form>
 
-            <p class="account-switch">
+            <p class="account-switch mt-6 text-center text-xs sm:text-sm text-zinc-600">
                 Already have an account?
-                <a href="login.html">Login here</a>
+                <a href="login.html" class="font-bold text-blue-500 hover:text-blue-600 transition">Login here</a>
             </p>
 
-            <div id="status" class="account-status" role="status" aria-live="polite"></div>
+            <div id="status" class="mt-4 text-center text-xs sm:text-sm text-red-600 font-medium" role="status"
+                aria-live="polite"></div>
         </section>
     </main>
 

@@ -4,6 +4,19 @@ import * as store from "../utils/storage.js";
 const form = document.getElementById("loginForm");
 const statusElement = document.getElementById("status");
 
+// Toggle password visibility
+document.querySelectorAll(".toggle-password").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const input = btn.closest("label").querySelector('input[type="password"], input[type="text"]');
+        const icon = btn.querySelector("i");
+        const isPassword = input.type === "password";
+        input.type = isPassword ? "text" : "password";
+        icon.classList.toggle("fa-eye");
+        icon.classList.toggle("fa-eye-slash");
+    });
+});
+
 form?.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -25,16 +38,16 @@ form?.addEventListener("submit", async (event) => {
 
         let apiKey = user.apiKey;
         if (!apiKey) {
-            const keyResult =  await createApiKey();
-            apiKey = 
-            keyResult?.data?.key ?? 
-            keyResult?.data?.apiKey ??
-            keyResult?.key ??
-            keyResult?.apiKey;
+            const keyResult = await createApiKey();
+            apiKey =
+                keyResult?.data?.key ??
+                keyResult?.data?.apiKey ??
+                keyResult?.key ??
+                keyResult?.apiKey;
         }
 
         if (apiKey) store.save({ ...store.load(), apiKey });
-        
+
 
         location.href = "index.html";
     } catch (error) {
