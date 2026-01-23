@@ -1,6 +1,6 @@
 import { getProfile, getProfilePosts } from "../api/profiles.js";
 import { wireLikes, wireComments } from "../utils/interactions.js";
-import { setStatus, renderSkeletons} from "../utils/ui.js";
+import { setStatus, renderSkeletons } from "../utils/ui.js";
 import { classifyPostImages, attachMediaGuards } from "../utils/media.js";
 import { mount as mountModal, close as closeModal } from "../utils/modal.js";
 import { openSearchModal } from "../utils/search.js";
@@ -8,7 +8,7 @@ import { escapeHtml, timeAgo } from "../utils/format.js";
 import { searchPosts } from "../api/posts.js";
 
 import { load, logout, save, getLikedSet, saveLikedSet } from "../utils/storage.js";
-import { createApiKey } from "../api/auth.js";  
+import { createApiKey } from "../api/auth.js";
 import { getPost, listPosts, createPost, reactToPost, createComment, updatePost, deletePost } from "../api/posts.js";
 import { postCard } from "../render/post-card.js";
 
@@ -23,17 +23,17 @@ document.getElementById("logoutBtn").addEventListener("click", logout);
 async function ensureApiKey() {
     let u = load();
     if (!u?.apiKey) {
-        const keyResult =  await createApiKey();
-        const apiKey = 
-            keyResult?.data?.key ?? 
+        const keyResult = await createApiKey();
+        const apiKey =
+            keyResult?.data?.key ??
             keyResult?.data?.apiKey ??
             keyResult?.key ??
             keyResult?.apiKey;
-            if (apiKey) {
-                save({ ...u, apiKey });
-                u = load();
-            }
+        if (apiKey) {
+            save({ ...u, apiKey });
+            u = load();
         }
+    }
     return u;
 }
 
@@ -64,7 +64,7 @@ async function loadDiscover() {
     try {
         setStatus(statusEl);
         renderSkeletons(feedEl, 3);
-        
+
         const data = await listPosts({ limit: 100 });
         let posts = (data?.data ?? data ?? []);
 
@@ -118,7 +118,7 @@ async function loadFriendsFeed() {
 searchBtn?.addEventListener("click", (e) => {
     e.preventDefault();
     openSearchModal({
-        searchPosts, 
+        searchPosts,
         statusEl,
         likedSet,
         currentUserName: user?.name || "",
@@ -140,12 +140,12 @@ function renderEmpty() {
     });
 }
 
-function renderPosts(posts=[]) {
+function renderPosts(posts = []) {
     if (!feedEl) return;
     if (!posts.length) return renderEmpty();
     feedEl.innerHTML = posts
-    .map((p) => postCard(p, { currentUserName: user?.name || "", likedSet }))
-    .join("");
+        .map((p) => postCard(p, { currentUserName: user?.name || "", likedSet }))
+        .join("");
     classifyPostImages(feedEl);
     attachMediaGuards(feedEl);
 }
@@ -167,7 +167,7 @@ async function loadFeed() {
     }
 }
 
-  // likes and comments
+// likes and comments
 
 wireLikes(feedEl, {
     reactToPost,
@@ -201,40 +201,41 @@ feedEl.addEventListener("click", async (e) => {
 
 function openCommentModal(post) {
     modalRoot.innerHTML = `
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
 
-        <div class="modal-bar">
-            <h3 id="modalTitle">Comments ${post?.author?.name ?? "Post"}</h3>
-            <button class="modal-close" data-close aria-label="Close modal"><i class="fa-solid fa-xmark"></i></button>
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
+        <div class="flex items-center justify-between p-4 border-b border-zinc-200">
+            <h3 id="modalTitle" class="text-lg font-semibold text-zinc-900">Comments on ${escapeHtml(post?.author?.name ?? "Post")}</h3>
+            <button class="text-zinc-500 hover:text-zinc-700 transition" data-close aria-label="Close modal"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
 
-        <div class="modal-content" data-list>
+        <div class="modal-content flex-1 overflow-y-auto p-4" data-list>
             ${Array.isArray(post?.comments) && post.comments.length ? post.comments.map(c => `
-                <div class="modal-comment">
-                    <strong>${escapeHtml(c.author?.name || "Unknown")}</strong>
-                    <span>${timeAgo(c.created)}</span>
-                    <div>${escapeHtml(c?.body || "")}</div>
+                <div class="modal-comment p-3 rounded-lg ">
+                    <div class="flex items-center justify-between">
+                        <strong class="text-sm font-semibold text-zinc-900">${escapeHtml(c.author?.name || "Unknown")}</strong>
+                        <span class="text-xs text-zinc-500">${timeAgo(c.created)}</span>
+                    </div>
+                    <p class="mt-2 text-sm text-zinc-700">${escapeHtml(c?.body || "")}</p>
                 </div>
-            `).join("") : 
+            `).join("") :
 
-            `<div class="modal-comment">
-                <p>No comments yet.</p>
-            </div>`}
+            `<p class="modal-comment text-center text-zinc-500 py-6">No comments yet.</p>`}
     </div>
 
-    <form class="modal-form" data-post="${post.id}">
-        <input type="text" name="comment" placeholder="Write a comment..." autocomplete="off" required>
-        <button class="btn btn--sm">Post Comment</button>
+    <form class="border-t border-zinc-200 p-4 flex gap-2" data-post="${post.id}">
+        <input type="text" name="comment" placeholder="Write a comment..." autocomplete="off" required class="flex-1 rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500">
+        <button class="btn px-4 py-2" type="submit">Post</button>
     </form>
     </div>
 `;
 
-modalRoot.removeAttribute("hidden");
-document.body.classList.add("no-scroll");
+    modalRoot.removeAttribute("hidden");
+    document.body.classList.add("no-scroll");
 
-modalRoot.addEventListener("click", (e) => {
-    if (e.target === modalRoot || e.target.closest("[data-close]")) closeModal();
-    }, {once:false});
+    modalRoot.addEventListener("click", (e) => {
+        if (e.target === modalRoot || e.target.closest("[data-close]")) closeModal();
+    }, { once: false });
 
     const formEl = modalRoot.querySelector("form.modal-form");
     const listEl = modalRoot.querySelector("[data-list]");
@@ -259,9 +260,9 @@ modalRoot.addEventListener("click", (e) => {
                 </div>
             `).join("") : `<div class="modal-comment"><p>No comments yet.</p></div>`;
 
-          await loadFeed();
+            await loadFeed();
         } catch (error) {
-            setStatus(statusEl,error.message || "Failed to comment", 1500);
+            setStatus(statusEl, error.message || "Failed to comment", 1500);
         }
     });
 }
@@ -275,7 +276,7 @@ feedEl.addEventListener("click", async (e) => {
     const id = card.dataset.post;
     if (id) location.href = `single-post.html?id=${encodeURIComponent(id)}`;
 });
-   
+
 
 // Edit / delete post
 
@@ -312,53 +313,55 @@ feedEl.addEventListener("click", async (e) => {
 });
 
 function openEditModal(post) {
-  modalRoot.innerHTML = `
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
-      <div class="modal-bar">
-        <h3 id="editTitle">Edit Post</h3>
-        <button class="modal-close" data-close aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-
-      <form class="modal-content" data-edit-form data-post="${post.id}">
-        <label class="field">
-          <span>Title</span>
-          <input type="text" name="title" value="${escapeHtml(post.title || "")}" maxlength="80">
-        </label>
-        <label class="field" style="margin-top:8px">
-          <span>Body</span>
-          <textarea name="body" rows="4">${escapeHtml(post.body || "")}</textarea>
-        </label>
-        <div style="display:flex; gap:8px; margin-top:12px;">
-          <button class="btn btn--sm" type="submit">Save</button>
-          <button class="btn btn--sm btn--ghost" type="button" data-close>Cancel</button>
+    modalRoot.innerHTML = `
+    <div class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+      <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden flex flex-col">
+        <div class="flex items-center justify-between p-4 border-b border-zinc-200">
+          <h3 id="editTitle" class="text-lg font-semibold text-zinc-900">Edit Post</h3>
+          <button class="text-zinc-500 hover:text-zinc-700 transition" data-close aria-label="Close"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
-      </form>
+
+        <form class="modal-content p-4 space-y-4" data-edit-form data-post="${post.id}">
+          <label class="field Id lock">
+            <span class="block text-sm font-semibold text-zinc-700 mb-2">Title</span>
+            <input type="text" name="title" value="${escapeHtml(post.title || "")}" maxlength="80" class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500">
+          </label>
+          <label class="field block">
+            <span class="block mt-4 text-sm font-semibold text-zinc-700 mb-2">Body</span>
+            <textarea name="body" rows="4" class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500">${escapeHtml(post.body || "")}</textarea>
+          </label>
+          <div class="flex gap-2 pt-2">
+            <button class="btn btn--sm flex-1 px-4 py-2 type="submit">Save</button>
+            <button class="btn--sm btn--ghost flex-1 px-4 py-2 bg-zinc-200 text-zinc-900 rounded-lg font-semibold hover:bg-zinc-300 cursor-pointer transition" type="button" data-close>Cancel</button>
+          </div>
+        </form>
+      </div>
     </div>
   `;
 
-  modalRoot.removeAttribute("hidden");
-  document.body.classList.add("no-scroll");
+    modalRoot.removeAttribute("hidden");
+    document.body.classList.add("no-scroll");
 
-  modalRoot.addEventListener("click", (e) => {
-    if (e.target === modalRoot || e.target.closest("[data-close]")) closeModal();
-  }, { once:false });
+    modalRoot.addEventListener("click", (e) => {
+        if (e.target === modalRoot || e.target.closest("[data-close]")) closeModal();
+    }, { once: false });
 
-  const form = modalRoot.querySelector("[data-edit-form]");
+    const form = modalRoot.querySelector("[data-edit-form]");
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const id = form.dataset.post;
-    const title = form.title.value.trim();
-    const body  = form.body.value.trim();
-    try {
-      await updatePost(id, { title, body });
-      closeModal();
-      await loadFeed();
-      setStatus(statusEl, "Post updated", 1200);
-    } catch (err) {
-      setStatus(statusEl, err.message || "Failed to update", 1500);
-    }
-  });
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const id = form.dataset.post;
+        const title = form.title.value.trim();
+        const body = form.body.value.trim();
+        try {
+            await updatePost(id, { title, body });
+            closeModal();
+            await loadFeed();
+            setStatus(statusEl, "Post updated", 1200);
+        } catch (err) {
+            setStatus(statusEl, err.message || "Failed to update", 1500);
+        }
+    });
 }
 
 // create post
@@ -374,7 +377,7 @@ form?.addEventListener("submit", async (event) => {
     let title = titleInput?.value.trim() || "";
     const body = bodyInput?.value.trim() || "";
 
-    
+
     const tagsRaw = tagsInput?.value || "";
     const tags = tagsRaw
         .split(",")
@@ -382,7 +385,7 @@ form?.addEventListener("submit", async (event) => {
         .filter(Boolean);
 
     if (!title) {
-        title = body.split("").slice(0, 40).join(""); 
+        title = body.split("").slice(0, 40).join("");
     }
     if (!title) return;
     if (title.length > 80) title = title.slice(0, 80);
@@ -414,8 +417,8 @@ const fab = document.getElementById("openCreate");
 fab?.addEventListener("click", () => { bodyInput?.focus(); });
 
 if (bodyInput && bodyInput.tagName === "TEXTAREA") {
-    const auto = () => { 
-        bodyInput.style.height = "auto"; 
+    const auto = () => {
+        bodyInput.style.height = "auto";
         bodyInput.style.height = bodyInput.scrollHeight + "px"
     };
     bodyInput.addEventListener("input", auto);
