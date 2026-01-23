@@ -166,23 +166,29 @@ root.addEventListener("click", async (e) => {
             const post = res?.data ?? res;
 
             modalRoot.innerHTML = `
-            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editPostTitle">
-                <div class="modal-bar">
-                    <h3 id="editPostTitle">Edit Post</h3>
-                    <button class="modal-close" data-close aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                <form class="modal-content" data-edit-form>
-                    <label class ="field">
-                        <span>Title</span>
-                        <input type="text" name="title" value="${escapeHtml(post.title || "")}" required>
-                    </label>
-                    <label class ="field">
-                        <span>Body</span>
-                        <textarea name="body" rows="4">${escapeHtml(post.body || "")}</textarea>
-                    </label>
-                    <button class="btn" type="submit">Update Post</button>
-                </form>
-            </div>
+            <div class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+      <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden flex flex-col">
+        <div class="flex items-center justify-between p-4 border-b border-zinc-200">
+          <h3 id="editTitle" class="text-lg font-semibold text-zinc-900">Edit Post</h3>
+          <button class="text-zinc-500 hover:text-zinc-700 transition" data-close aria-label="Close"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+
+        <form class="modal-content p-4 space-y-4" data-edit-form data-post="${post.id}">
+          <label class="field Id lock">
+            <span class="block text-sm font-semibold text-zinc-700 mb-2">Title</span>
+            <input type="text" name="title" value="${escapeHtml(post.title || "")}" maxlength="80" class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500">
+          </label>
+          <label class="field block">
+            <span class="block mt-4 text-sm font-semibold text-zinc-700 mb-2">Body</span>
+            <textarea name="body" rows="4" class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500">${escapeHtml(post.body || "")}</textarea>
+          </label>
+          <div class="flex gap-2 pt-2">
+            <button class="btn btn--sm flex-1 px-4 py-2 type="submit">Save</button>
+            <button class="btn--sm btn--ghost flex-1 px-4 py-2 bg-zinc-200 text-zinc-900 rounded-lg font-semibold hover:bg-zinc-300 cursor-pointer transition" type="button" data-close>Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
             `;
 
             modalRoot.removeAttribute("hidden");
