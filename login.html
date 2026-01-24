@@ -32,26 +32,37 @@
             <span>Back</span>
         </a>
 
-        <section class="account-panel ">
-            <h1 class="account-title mb-2 text-2xl sm:text-3xl font-bold text-zinc-900">We've missed you!</h1>
-            <p class="mb-6 text-sm sm:text-base text-zinc-600">Sign in to your account to continue</p>
+        <section class="account-panel">
+            <h1 class="account-title mb-2 text-2xl sm:text-3xl font-bold text-zinc-900">
+                We've missed you!
+            </h1>
+            <p class="mb-6 text-sm sm:text-base text-zinc-600">
+                Sign in to your account to continue
+            </p>
 
-            <form id="loginForm" class="space-y-4 sm:space-y-5 rounded-2xl border border-zinc-200 p-6 sm:p-10"
-                novalidate>
+            <form id="loginForm" class="space-y-4 sm:space-y-5 rounded-2xl border border-zinc-200 p-6 sm:p-10">
+
                 <label class="field block">
-                    <span class="field-label mb-2 block text-base sm:text-lg font-semibold text-zinc-700">Email</span>
+                    <span class="field-label mb-2 block text-base sm:text-lg font-semibold text-zinc-700">
+                        Email
+                    </span>
                     <input
                         class="field-input w-full rounded-xl border border-zinc-300 px-4 py-2 sm:py-3 text-base focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent transition"
-                        name="email" type="email" placeholder="your@email.com" required>
+                        name="email" type="email" placeholder="your@email.com" required autocomplete="email"
+                        aria-label="email">
                 </label>
 
                 <label class="field block">
-                    <span
-                        class="field-label mb-2 block text-base sm:text-lg font-semibold text-zinc-700">Password</span>
+                    <span class="field-label mb-2 block text-base sm:text-lg font-semibold text-zinc-700">
+                        Password
+                    </span>
+
                     <div class="relative">
                         <input
                             class="field-input w-full rounded-xl border border-zinc-300 px-4 py-2 sm:py-3 pr-12 text-base focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent transition"
-                            name="password" type="password" placeholder="••••••••" required>
+                            name="password" type="password" placeholder="••••••••" required minlength="8"
+                            autocomplete="new-password" aria-label="password">
+
                         <button type="button"
                             class="toggle-password absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-zinc-500 hover:text-zinc-700 transition"
                             aria-label="Toggle password visibility">
@@ -62,16 +73,20 @@
 
                 <button
                     class="btn account-cta w-full rounded-xl text-white font-semibold py-2 sm:py-3 px-4 transition duration-200 mt-2"
-                    type="submit">Log in</button>
+                    type="submit">
+                    Log in
+                </button>
             </form>
 
             <p class="account-switch mt-6 text-center text-xs sm:text-sm text-zinc-600">
                 Don't have an account?
-                <a href="register.html" class="font-bold text-blue-500 hover:text-blue-600 transition">Register
-                    here</a>
+                <a href="register.html" class="font-bold text-blue-500 hover:text-blue-600 transition">
+                    Register here
+                </a>
             </p>
 
-            <div id="status" class="account-status mt-4 text-center text-sm" role="status" aria-live="polite"></div>
+            <div id="status" class="account-status mt-4 text-center text-sm" role="status" aria-live="polite">
+            </div>
         </section>
     </main>
 
