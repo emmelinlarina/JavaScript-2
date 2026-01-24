@@ -315,7 +315,9 @@ feedEl.addEventListener("click", async (e) => {
 function openEditModal(post) {
     modalRoot.innerHTML = `
     <div class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+
       <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden flex flex-col">
+      
         <div class="flex items-center justify-between p-4 border-b border-zinc-200">
           <h3 id="editTitle" class="text-lg font-semibold text-zinc-900">Edit Post</h3>
           <button class="text-zinc-500 hover:text-zinc-700 transition" data-close aria-label="Close"><i class="fa-solid fa-xmark text-xl"></i></button>
