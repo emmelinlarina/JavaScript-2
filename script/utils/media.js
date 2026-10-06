@@ -1,17 +1,34 @@
 export function normalizeMediaUrl(u) {
     if (!u) return "";
     let url = String(u).trim();
+
+    // Skip if it's not a valid URL-like string
+    if (!url || url.length < 5) return "";
+
+    // Handle protocol-relative URLs
     if (url.startsWith("//")) url = "https:" + url;
+
+    // Upgrade http to https
     if (url.startsWith("http://")) url = url.replace(/^http:\/\//, "https://");
-    url = encodeURI(url);
+
+    // Only encode if it's already a valid http(s) URL
+    if (!url.startsWith("https://")) return "";
+
+    try {
+        url = encodeURI(url);
+    } catch (e) {
+        console.warn("Failed to encode URL:", u);
+        return "";
+    }
+
     return url;
 }
 
-export function pickBoxClass(ratio){
+export function pickBoxClass(ratio) {
     if (ratio >= 1.6) return "r-16x9";
     if (ratio <= 0.9) return "r-4x5";
     return "r-1x1";
-} 
+}
 
 export function classifyPostImages(scope = document) {
     scope.querySelectorAll(".post-media img").forEach(img => {
@@ -25,7 +42,7 @@ export function classifyPostImages(scope = document) {
             }
         };
         if (img.complete) apply();
-        else img.addEventListener("load", apply, {once:true});
+        else img.addEventListener("load", apply, { once: true });
     });
 }
 
@@ -42,12 +59,12 @@ export function attachMediaGuards(scope = document) {
             fig.remove();
         };
 
-        img.addEventListener("error", nuke, {once:true});
+        img.addEventListener("error", nuke, { once: true });
 
         const t = setTimeout(() => {
-            if (!img.complete || img.naturalWidth === 0) nuke(); 
+            if (!img.complete || img.naturalWidth === 0) nuke();
         }, 6000);
 
-        img.addEventListener("load", () => clearTimeout(t), {once:true});
+        img.addEventListener("load", () => clearTimeout(t), { once: true });
     });
 }
