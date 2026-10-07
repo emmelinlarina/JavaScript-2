@@ -119,7 +119,6 @@ async function loadFriendsFeed() {
     renderPosts(posts);
     setStatus(statusEl, "", 0);
   } catch (error) {
-    console.error("Failed to load friends feed:", error);
     setStatus(statusEl, error.message || "Failed to load friends feed", 1500);
   }
 }
@@ -170,11 +169,6 @@ async function loadFeed() {
     renderPosts(posts);
     setStatus(statusEl, "");
   } catch (error) {
-    console.error(
-      "Failed to load feed:",
-      error.status,
-      error.data || error.message,
-    );
     setStatus(statusEl, error.message || "Failed to load feed");
     if (feedEl) feedEl.innerHTML = "";
   }
@@ -362,7 +356,12 @@ function openEditModal(post) {
             <textarea name="body" rows="4" class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500">${escapeHtml(post.body || "")}</textarea>
           </label>
           <div class="flex gap-2 pt-2">
-            <button class="btn btn--sm flex-1 px-4 py-2 type="submit">Save</button>
+            <button 
+                class="btn btn--sm flex-1 px-4 py-2" 
+                type="submit"
+            >
+                Save
+                </button>
             <button class="btn--sm btn--ghost flex-1 px-4 py-2 bg-zinc-200 text-zinc-900 rounded-lg font-semibold hover:bg-zinc-300 cursor-pointer transition" type="button" data-close>Cancel</button>
           </div>
         </form>

@@ -138,7 +138,6 @@ async function loadProfilePosts() {
 
     setStatus(statusEl, "", 0);
   } catch (error) {
-    console.error(error);
     feedEl.innerHTML = `<p>Failed to load posts.</p>`;
     setStatus(statusEl, error.message || "Failed to load posts", 3000);
   }
@@ -153,7 +152,6 @@ async function loadProfilePage() {
     renderProfileInfo(profile);
     await loadProfilePosts();
   } catch (error) {
-    console.error(error);
     setStatus(statusEl, error.message || "Failed to load profile", 3000);
 
     if (root) {
@@ -197,7 +195,6 @@ followBtn?.addEventListener("click", async () => {
 
     await loadProfilePage();
   } catch (error) {
-    console.error(error);
     setStatus(
       statusEl,
       error.message || "Failed to update follow status",
@@ -352,7 +349,6 @@ function openEditProfileModal(profile) {
       await loadProfilePage();
       setStatus(statusEl, "Profile updated!", 1500);
     } catch (error) {
-      console.error(error);
       setStatus(statusEl, error.message || "Failed to save profile", 2000);
     }
   });

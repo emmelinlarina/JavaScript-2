@@ -45,7 +45,6 @@ export async function apiRequest(
         : null;
       msg = list || data?.message || msg;
     }
-    console.error("API Error:", response.status, data);
     const error = new Error(msg);
     error.status = response.status;
     error.data = data;
