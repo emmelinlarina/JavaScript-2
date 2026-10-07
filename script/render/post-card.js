@@ -3,13 +3,15 @@ import * as media from "../utils/media.js";
 import { getStarCount } from "../utils/interactions.js";
 
 export function postCard(p, { currentUserName, likedSet, isSingleView }) {
-
   const author = p?.author?.name || "Unknown";
   const profileUrl = `profile.html?name=${encodeURIComponent(author)}`;
   const avatarUrl = p?.author?.avatar?.url || "";
-  const isOwner = currentUserName && p?.author?.name && currentUserName === p.author.name;
+  const isOwner =
+    currentUserName && p?.author?.name && currentUserName === p.author.name;
 
-  const mediaUrl = media.normalizeMediaUrl(p?.media?.url || p?.image?.url || p?.imageUrl || "");
+  const mediaUrl = media.normalizeMediaUrl(
+    p?.media?.url || p?.image?.url || p?.imageUrl || "",
+  );
   const mediaAlt = p?.media?.alt || "";
 
   const body = escapeHtml(p?.body || "");
@@ -23,22 +25,24 @@ export function postCard(p, { currentUserName, likedSet, isSingleView }) {
   const relative = timeAgo(p.created);
 
   return `
-<article class="post h-full flex flex-col rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition"
-  data-post="${p.id}"
->
-  <header class="flex items-center justify-between gap-3 p-4">
-    <div class="flex items-center gap-3 min-w-0">
-      <span
-        class="h-10 w-10 shrink-0 rounded-xl bg-zinc-800 bg-cover bg-center ring-1 ring-white/10"
-        ${avatarUrl ? `style="background-image:url('${avatarUrl}')"` : ""}
-      ></span>
+  <article class="post h-full flex flex-col rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer"
+    data-post="${p.id}"
+    >
+    <header class="flex items-center justify-between gap-3 p-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <span
+          class="h-10 w-10 shrink-0 rounded-xl bg-zinc-800 bg-cover bg-center ring-1 ring-white/10"
+          ${avatarUrl ? `style="background-image:url('${avatarUrl}')"` : ""}
+        ></span>
 
-      <a href="${profileUrl}" class="truncate text-sm font-semibold text-zinc-900 hover:underline">
-        ${escapeHtml(author)}
-      </a>
+        <a href="${profileUrl}" class="truncate text-sm font-semibold text-zinc-900 hover:underline">
+          ${escapeHtml(author)}
+        </a>
     </div>
 
-    ${isOwner ? `
+    ${
+      isOwner
+        ? `
       <div class="flex items-center gap-2 shrink-0">
         <button class="h-10 w-10 rounded-xl border border-zinc-700 bg-white/5 text-zinc-900 hover:bg-white/10 transition" data-edit="${p.id}" aria-label="Edit post">
           <i class="fa-solid fa-pen"></i>
@@ -47,13 +51,17 @@ export function postCard(p, { currentUserName, likedSet, isSingleView }) {
           <i class="fa-solid fa-trash"></i>
         </button>
       </div>
-    ` : ""}
+    `
+        : ""
+    }
   </header>
 
-  ${mediaUrl ? `
+  ${
+    mediaUrl
+      ? `
     <figure class="px-5 post-media">
       <div
-        class="overflow-hidden rounded-2xl bg-zinc-100 border border-zinc-200 aspect-square flex items-center justify-center relative ${isSingleView ? 'mx-auto max-w-2xl' : 'w-full'}"
+        class="overflow-hidden rounded-2xl bg-zinc-100 border border-zinc-200 aspect-square flex items-center justify-center relative ${isSingleView ? "mx-auto max-w-2xl" : "w-full"}"
         style="aspect-ratio: 1 / 1"
       >
         <div class="absolute inset-0 bg-linear-to-r from-zinc-200 via-zinc-100 to-zinc-200 animate-pulse"></div>
@@ -70,23 +78,34 @@ export function postCard(p, { currentUserName, likedSet, isSingleView }) {
         >
       </div>
     </figure>
-  ` : ""}
+  `
+      : ""
+  }
 
-  <time class="px-5 ${mediaUrl ? 'pt-3' : 'pt-4'} text-xs text-zinc-500" title="${fullDate}">${relative}</time>
+  <time class="px-5 ${mediaUrl ? "pt-3" : "pt-4"} text-xs text-zinc-500" title="${fullDate}">${relative}</time>
 
-  ${p.title ? `
-    <h2 class="px-5 ${mediaUrl ? 'pt-2' : 'pt-3'} text-lg font-bold text-zinc-900">
+  ${
+    p.title
+      ? `
+    <h2 class="px-5 ${mediaUrl ? "pt-2" : "pt-3"} text-lg font-bold text-zinc-900">
       <a class="hover:underline" href="${postUrl}" data-post-link>${escapeHtml(p.title)}</a>
     </h2>
-  ` : ""}
+  `
+      : ""
+  }
 
-  ${body ? ` <p class="mb-3 px-5 ${mediaUrl ? 'pt-2' : 'pt-1'} text-sm text-zinc-700 leading-relaxed">  ${body} </p> ` : ""}
+  ${body ? ` <p class="mb-3 px-5 ${mediaUrl ? "pt-2" : "pt-1"} text-sm text-zinc-700 leading-relaxed">  ${body} </p> ` : ""}
 
   
 
     <footer class="mt-auto px-5 py-3 border-t border-zinc-200 flex items-center gap-3 bg-white">
 
-    <button class="h-10 w-10 rounded-xl bg-white hover:bg-zinc-50 text-zinc-700 transition ${isLiked ? "text-yellow-600 border-yellow-200 bg-yellow-50" : "text-zinc-700"}" data-like="${p.id}" aria-label="Like">
+    <button 
+        class="h-10 w-10 rounded-xl bg-white hover:bg-zinc-50 transition-colors 
+        ${isLiked ? "text-yellow-500" : "text-zinc-700"}" 
+        data-like="${p.id}" 
+        aria-label="Like"
+      >
       <i class="${isLiked ? "fa-solid" : "fa-regular"} fa-star"></i>
     </button>
 
@@ -100,12 +119,11 @@ export function postCard(p, { currentUserName, likedSet, isSingleView }) {
   </footer>
 
   <div class="px-5 pb-4" id="c-${p.id}" hidden>
-    <form class="mt-3 flex gap-2" data-post="${p.id}">
+    <form class="comment-form mt-3 flex gap-2" data-post="${p.id}">
       <input class="input" type="text" name="comment" placeholder="Write a comment..." autocomplete="off" required>
       <button type="submit" class="btn btn--sm">Post</button>
     </form>
   </div>
 </article>
 `;
-
-} 
+}
