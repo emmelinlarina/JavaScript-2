@@ -74,7 +74,7 @@ function renderSingle(post) {
                 ${renderCommentsList(post)}
             </div>
             <div class="border-t border-zinc-200 bg-zinc-50 px-6 py-4">
-                <form class="flex gap-3" data-post="${post.id}">
+                <form class="comment-form flex gap-3" data-post="${post.id}">
                     <input 
                         class="input flex-1"
                         type="text" 
@@ -124,7 +124,6 @@ function renderSingle(post) {
         listEl.innerHTML = renderCommentsList(data);
         setStatus(statusEl, "Comment posted", 1500);
       } catch (err) {
-        console.error(err);
         setStatus(statusEl, err.message || "Failed to post comment", 2000);
       }
     });
@@ -140,7 +139,6 @@ async function loadSingle() {
     renderSingle(post);
     setStatus(statusEl, "", 0);
   } catch (err) {
-    console.error(err);
     root.innerHTML = `<p class="error">Failed to load post: ${err.message || err}</p>`;
     setStatus(statusEl, "Failed to load post.", 2000);
   }
@@ -156,7 +154,6 @@ root.addEventListener("click", async (e) => {
       setStatus(statusEl, "Post deleted.", 2000);
       history.back();
     } catch (err) {
-      console.error(err);
       setStatus(statusEl, "Failed to delete post.", 2000);
     }
     return;
@@ -186,7 +183,7 @@ root.addEventListener("click", async (e) => {
             <textarea name="body" rows="4" class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500">${escapeHtml(post.body || "")}</textarea>
           </label>
           <div class="flex gap-2 pt-2">
-            <button class="btn btn--sm flex-1 px-4 py-2 type="submit">Save</button>
+            <button class="btn btn--sm flex-1 px-4 py-2" type="submit">Save</button>
             <button class="btn--sm btn--ghost flex-1 px-4 py-2 bg-zinc-200 text-zinc-900 rounded-lg font-semibold hover:bg-zinc-300 cursor-pointer transition" type="button" data-close>Cancel</button>
           </div>
         </form>
@@ -217,7 +214,6 @@ root.addEventListener("click", async (e) => {
           await loadSingle();
           setStatus(statusEl, "Post updated.", 2000);
         } catch (err) {
-          console.error(err);
           setStatus(statusEl, "Failed to update post.", 2000);
         }
       });
