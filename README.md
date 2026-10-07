@@ -2,6 +2,8 @@
 
 ## Social Media App — Frontend Development
 
+![Social Media App](images/CSS_Frameworks-200kb.jpeg)
+
 This project simulates a minimal, functional social media environment where users can register, log in, create posts, follow others, react, and interact through comments. It is designed to demonstrate my ability to structure, plan, and develop a complete front-end application powered by the Noroff Social API.
 
 The goal of the project is to create a responsive and interactive web application where users can:
@@ -17,15 +19,61 @@ The goal of the project is to create a responsive and interactive web applicatio
 
 This project focuses on JavaScript logic, API communication, modular code structure, and implementing CRUD operations.
 
+### Project Background
+
+This project was originally developed as my JavaScript 2 assignment and was later revisited for the CSS Frameworks assignment, where Tailwind CSS was introduced to selected parts of the application. At the time, the CSS Frameworks work was submitted as a separate pull request and was not fully merged into the main branch. As part of Portfolio 2, I returned to the project, merged the previous CSS Frameworks work, and continued improving and testing the application.
+
+Because the project was built on an existing codebase, it currently contains both plain CSS and Tailwind CSS. With more time, I would continue migrating the remaining styles to Tailwind for greater consistency.
+
+For Portfolio 2, I focused on improving functionality, mobile responsiveness, accessibility, and overall code quality and maintainability. This included addressing previous feedback, fixing interaction issues (like comments not working), cleaning up production code, and making the project more reliable and suitable for presentation.
+
+## Getting Started
+
+### Installing
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/emmelinlarina/JavaScript-2.git
+```
+
+2. Navigate to the project directory:
+
+```
+cd JavaScript-2
+```
+
+3. Install the dependencies:
+
+```
+npm install
+```
+
+### Running
+
+To run Tailwind CSS in watch mode during development:
+
+```bash
+npm run dev
+```
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+The application can then be opened locally using a development server such as Live Server.
+
 ### Links
 
 - GitHub repo: https://github.com/emmelinlarina/JavaScript-2
 - Live demo (GitHub Pages): https://emmelinlarina.github.io/JavaScript-2/
 - GitHub Projects board: https://github.com/users/emmelinlarina/projects/12
 
-## Admin / Test user:
+## Demo Account:
 
-    Use this dummy to login:
+    Use the following account to test the application:
 
     Name: Bobbins
     Email: bobbyiscool321@stud.noroff.no
@@ -37,32 +85,12 @@ This project focuses on JavaScript logic, API communication, modular code struct
     - make a unique username and email with letters and numbers
     - make a unique password
 
-    Features and User Stories
-
-### Admin Notes for Testers
+### Technical Notes
 
 - Local likes are stored per user in `likedPosts:<username>`
 - Media guards remove broken or slow-loading images
 - Long text is handled with overflow-wrap to prevent layout breaking
 - All authenticated endpoints require both token + API key
-
-### Required features
-
-| Feature                | Description                                                              |
-| ---------------------- | ------------------------------------------------------------------------ |
-| Register new user      | As a user, I can register a new user on the register user page.          |
-| Login user             | As a user, I can login as a registered user on the login user page.      |
-| Get all posts          | As a user I can view all the posts on the feed page.                     |
-| Get post               | As a user, I can view a single post when clicking on a post in the feed. |
-| Create post            | As a user, I can create a single post.                                   |
-| Edit post              | As a user, I can edit my own post(s).                                    |
-| Delete post            | As a user, I can delete my own post(s).                                  |
-| Get posts of a user    | As a user, I can view all the posts of a different user.                 |
-| Follow / Unfollow user | As a user, I can follow/unfollow other users.                            |
-| Search posts           | As a user, I can search through posts using a search bar.                |
-| View my own profile    | As a user I can view my own profile.                                     |
-
-## Features
 
 ### Authentication
 
@@ -89,8 +117,12 @@ This project focuses on JavaScript logic, API communication, modular code struct
 - Follow / Unfollow users
 - See profile stats (followers, following, post count)
 - Clickable posts on profile pages
-- Search
-- Search modal with results
+
+### Search
+
+- Search for posts
+- Search posts by title or content
+- View search results in a modal
 
 ### UI/UX
 
@@ -99,13 +131,14 @@ This project focuses on JavaScript logic, API communication, modular code struct
 - Modal system (comments, edit)
 - Media guards for broken images
 
-## Tech Stack
+## Built With
 
 - JavaScript (ES6 modules)
 - HTML
 - CSS
-- Noroff API
-- LocalStorage for persistent like data (could not make the likes work)
+- Tailwind CSS
+- Noroff Social API
+- LocalStorage for persistent user-specific data
 - GitHub Pages for deployment
 
 ## Acknowledgement & references
@@ -118,3 +151,15 @@ This project focuses on JavaScript logic, API communication, modular code struct
 > Emmelin Larina Tvedt Nilsen, Frontend Development Student
 
 GitHub: https://github.com/emmelinlarina
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
