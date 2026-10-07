@@ -1,4 +1,4 @@
-# JavaScript-2-Assignment
+# JavaScript-2-Assignment / CSS Frameworks
 
 ## Social Media App — Frontend Development
 
@@ -151,15 +151,3 @@ The application can then be opened locally using a development server such as Li
 > Emmelin Larina Tvedt Nilsen, Frontend Development Student
 
 GitHub: https://github.com/emmelinlarina
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
