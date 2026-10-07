@@ -27,7 +27,7 @@
   }
 
   .chip {
-    @apply rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm text-zinc-900 hover:bg-zinc-100 transition m-2;
+    @apply rounded-full border border-zinc-300 bg-white px-3 sm:px-4 py-2 text-sm text-zinc-900 hover:bg-zinc-100 transition;
   }
 
   .chip.is-active {
