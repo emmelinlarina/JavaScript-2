@@ -33,11 +33,8 @@ if (!postId) {
   throw new Error("single-post: Missing post ID");
 }
 
-// likes
 const username = user?.email || user?.id || user?.name || "anon";
 const likedSet = getLikedSet(username) || new Set();
-
-//render
 
 function renderCommentsList(post) {
   const comments = Array.isArray(post?.comments) ? post.comments : [];
@@ -148,8 +145,6 @@ async function loadSingle() {
     setStatus(statusEl, "Failed to load post.", 2000);
   }
 }
-
-// edit / delete
 
 root.addEventListener("click", async (e) => {
   const del = e.target.closest("[data-delete]");

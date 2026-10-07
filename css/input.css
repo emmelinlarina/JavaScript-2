@@ -1,34 +1,44 @@
 @import "tailwindcss";
 
 @layer base {
-    html {
-        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    }
+  html {
+    font-family:
+      Inter,
+      system-ui,
+      -apple-system,
+      Segoe UI,
+      Roboto,
+      Arial,
+      sans-serif;
+  }
 
+  button {
+    @apply cursor-pointer;
+  }
 }
 
 @layer components {
-    .btn {
-        @apply rounded-xl px-4 py-3 font-semibold bg-gray-900 text-white hover:bg-gray-900/20 hover:text-black transition cursor-pointer;
-    }
+  .btn {
+    @apply rounded-xl px-4 py-3 font-semibold bg-gray-900 text-white hover:bg-gray-900/20 hover:text-black transition cursor-pointer;
+  }
 
-    .btn--sm {
-        @apply px-3 py-2 text-sm;
-    }
+  .btn--sm {
+    @apply px-3 py-2 text-sm;
+  }
 
-    .chip {
-        @apply rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm text-zinc-900 hover:bg-zinc-100 transition m-2;
-    }
+  .chip {
+    @apply rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm text-zinc-900 hover:bg-zinc-100 transition m-2;
+  }
 
-    .chip.is-active {
-        @apply bg-zinc-900 text-white border-zinc-900;
-    }
+  .chip.is-active {
+    @apply bg-zinc-900 text-white border-zinc-900;
+  }
 
-    .input {
-        @apply w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder:text-zinc-400;
-    }
+  .input {
+    @apply w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder:text-zinc-400;
+  }
 
-    #status {
-        @apply text-sm text-red-600 font-medium mt-4;
-    }
+  #status {
+    @apply text-sm text-red-600 font-medium mt-4;
+  }
 }
