@@ -65,6 +65,22 @@ npm run build
 
 The application can then be opened locally using a development server such as Live Server.
 
+## Portfolio 2 Improvements
+
+As part of Portfolio 2, I revisited the project and made improvements based on testing and previous teacher feedback.
+
+Some of the improvements include:
+
+- Fixed comment functionality on individual posts and within the comment modal
+- Improved search modal functionality and interaction handling
+- Improved button, input, and interactive element styling
+- Added clearer hover, focus, and pointer states for interactive elements
+- Improved mobile responsiveness on the profile and feed pages
+- Improved a11y with ARIA labels and navigation improvements
+- Removed console logs and obsolete commented-out code
+- Cleaned up unused and production code
+- Updated the Tailwind CSS build setup and compiled styles
+
 ### Links
 
 - GitHub repo: https://github.com/emmelinlarina/JavaScript-2
