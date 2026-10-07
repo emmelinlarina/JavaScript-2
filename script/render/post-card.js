@@ -100,7 +100,12 @@ export function postCard(p, { currentUserName, likedSet, isSingleView }) {
 
     <footer class="mt-auto px-5 py-3 border-t border-zinc-200 flex items-center gap-3 bg-white">
 
-    <button class="h-10 w-10 rounded-xl bg-white hover:bg-zinc-50 text-zinc-700 transition ${isLiked ? "text-yellow-600 border-yellow-200 bg-yellow-50" : "text-zinc-700"}" data-like="${p.id}" aria-label="Like">
+    <button 
+        class="h-10 w-10 rounded-xl bg-white hover:bg-zinc-50 transition-colors 
+        ${isLiked ? "text-yellow-500" : "text-zinc-700"}" 
+        data-like="${p.id}" 
+        aria-label="Like"
+      >
       <i class="${isLiked ? "fa-solid" : "fa-regular"} fa-star"></i>
     </button>
 
@@ -114,7 +119,7 @@ export function postCard(p, { currentUserName, likedSet, isSingleView }) {
   </footer>
 
   <div class="px-5 pb-4" id="c-${p.id}" hidden>
-    <form class="mt-3 flex gap-2" data-post="${p.id}">
+    <form class="comment-form mt-3 flex gap-2" data-post="${p.id}">
       <input class="input" type="text" name="comment" placeholder="Write a comment..." autocomplete="off" required>
       <button type="submit" class="btn btn--sm">Post</button>
     </form>

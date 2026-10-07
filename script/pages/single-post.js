@@ -103,7 +103,7 @@ function renderSingle(post) {
     statusEl,
   });
 
-  const form = root.querySelector(".comment-form");
+  const form = root.querySelector("[data-comments] .comment-form");
   const listEl = root.querySelector("[data-list]");
 
   if (form) {

@@ -2,13 +2,13 @@
 
 export function getStarCount(p) {
   if (!Array.isArray(p?.reactions)) return 0;
-  const r = p.reactions.find(x => x.symbol === "★");
+  const r = p.reactions.find((x) => x.symbol === "★");
   return Number(r?.count || 0);
 }
 
 export function wireLikes(
   container,
-  { reactToPost, getPost, likedSet, saveLikedSet, username, statusEl }
+  { reactToPost, getPost, likedSet, saveLikedSet, username, statusEl },
 ) {
   container.addEventListener("click", async (e) => {
     const btn = e.target.closest("[data-like]");
@@ -32,15 +32,17 @@ export function wireLikes(
         after = getStarCount(fresh?.data ?? fresh);
       }
 
-      btn.classList.add("liked");
+      btn.classList.add("liked", "text-yellow-500");
+      btn.classList.remove("text-zinc-700");
+
       if (icon) icon.className = "fa-solid fa-star";
       if (countEl) countEl.textContent = String(after);
+
       likedSet.add(id);
       saveLikedSet(likedSet, username);
-
     } catch (err) {
-
-      btn.classList.remove("liked");
+      btn.classList.remove("liked", "text-yellow-500");
+      btn.classList.add("text-zinc-700");
       if (icon) icon.className = "fa-regular fa-star";
       statusEl && (statusEl.textContent = err.message || "Failed to like");
       setTimeout(() => (statusEl.textContent = ""), 1500);
@@ -50,11 +52,9 @@ export function wireLikes(
   });
 }
 
-/* Comments */
-
 export function wireComments(
   container,
-  { createComment, getPost, statusEl, onAfter }
+  { createComment, getPost, statusEl, onAfter },
 ) {
   container.addEventListener("submit", async (e) => {
     const form = e.target.closest(".comment-form");
@@ -76,13 +76,16 @@ export function wireComments(
         const post = fresh?.data ?? fresh;
 
         wrap.innerHTML = (post.comments || [])
-          .map(c => `
+          .map(
+            (c) => `
         <div class="modal-comment">
             <strong>${escapeHtml(c.author?.name || "Unknown")}</strong> 
                 <span>${timeAgo(c.created)}</span>
                 <div>${escapeHtml(c.body || "")}</div>
             </div>
-        `).join("");
+        `,
+          )
+          .join("");
       }
 
       if (typeof onAfter === "function") onAfter();

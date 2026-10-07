@@ -239,7 +239,9 @@ function openCommentModal(post) {
             }
     </div>
 
-    <form class="border-t border-zinc-200 p-4 flex gap-2" data-post="${post.id}">
+    <form 
+        class="modal-form border-t border-zinc-200 p-4 flex gap-2" 
+        data-post="${post.id}">
         <input type="text" name="comment" placeholder="Write a comment..." autocomplete="off" required class="flex-1 rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500">
         <button class="btn px-4 py-2" type="submit">Post</button>
     </form>
