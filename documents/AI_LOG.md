@@ -10,7 +10,7 @@ Noroff Front-end Development
 - GitHub Copilot
 - ChatGPT
 
-## GitHub Copilot
+## GitHub Copilot 28 Sept - 10 Oct 2026
 
 ### Purpose
 
@@ -22,7 +22,7 @@ Autocomplete helped speed up the coding process by suggesting and completing cod
 
 Copilot helped make writing code more efficient, particularly for repetitive tasks, allowing me to focus more on understanding the functionality and improving the application.
 
-## ChatGPT
+## ChatGPT 6 Oct - 8 Oct 2026
 
 ### Purpose
 
